@@ -28,7 +28,7 @@ namespace TaskManager.Controllers
                                                  select new
                                                  {
                                                      s.Id,
-                                                     Name = s.UserData.LastName + " " + s.UserData.MiddleName + " " + s.UserData.FirstName
+                                                     Name = s.UserData.LastName + " " + s.UserData.FirstName + " " + s.UserData.MiddleName
                                                  }), "Id", "Name", null);
             
             ViewBag.Items = projectManager;
@@ -36,17 +36,26 @@ namespace TaskManager.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateProject(CreateProjectView model)
+        public async Task<ActionResult> CreateProject(CreateProjectViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var project = Mapper.Map<CreateProjectView, Project>(model);
+                var project = Mapper.Map<CreateProjectViewModel, Project>(model);
                 context.Projects.Add(project);
                 await context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
             return View();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ListProject()
+        {
+            List<ListProjectViewModel> listProjectViewModel = new List<ListProjectViewModel>();
+            var projects =  await context.Projects.ToListAsync();
+            var model = Mapper.Map(projects, listProjectViewModel);
+            return View(model);
         }
 
         protected override void Dispose(bool disposing)

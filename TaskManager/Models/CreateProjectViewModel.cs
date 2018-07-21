@@ -8,7 +8,7 @@ using TaskManager.DAL;
 
 namespace TaskManager.Models
 {
-    public class CreateProjectView
+    public class CreateProjectViewModel
     {
 
         [Required]
