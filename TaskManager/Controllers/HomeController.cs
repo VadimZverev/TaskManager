@@ -72,6 +72,11 @@ namespace TaskManager.Controllers
                                                          }), "Id", "Name", project.UserId);
                 ViewBag.Items = projectManager;
                 var projectEdit = Mapper.Map<Project, EditProjectViewModel>(project);
+
+                if (projectEdit.DateClose != null)
+                {
+                    projectEdit.ProjectClose = true;
+                }
                 return View(projectEdit);
             }
 
