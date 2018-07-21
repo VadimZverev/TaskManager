@@ -43,10 +43,65 @@ namespace TaskManager.Controllers
                 var project = Mapper.Map<CreateProjectViewModel, Project>(model);
                 context.Projects.Add(project);
                 await context.SaveChangesAsync();
-                return RedirectToAction("Index");
+                return RedirectToAction("ListProject");
             }
 
             return View();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ProjectEdit(int? id)
+        {
+            if (id == null)
+            {
+                return HttpNotFound();
+            }
+
+            var project = context.Projects.Find(id);
+
+            if (project != null)
+            {
+
+                var items = await context.Users.ToListAsync();
+
+                var projectManager = new SelectList((from s in items
+                                                         select new
+                                                         {
+                                                             s.Id,
+                                                             Name = s.UserData.LastName + " " + s.UserData.FirstName + " " + s.UserData.MiddleName
+                                                         }), "Id", "Name", project.UserId);
+                ViewBag.Items = projectManager;
+                var projectEdit = Mapper.Map<Project, EditProjectViewModel>(project);
+                return View(projectEdit);
+            }
+
+            return RedirectToAction("ListProject");
+        }
+
+        [HttpPost]
+        public ActionResult ProjectEdit(EditProjectViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (model.ProjectClose == true)
+                {
+                    model.DateClose = DateTime.Now;
+                }
+                else
+                {
+                    model.DateClose = null;
+                }
+
+                var project = Mapper.Map<EditProjectViewModel, Project>(model);
+
+                context.Entry(project).State = EntityState.Modified;
+
+                context.SaveChanges();
+
+                return RedirectToAction("ListProject");
+            }
+            
+            return View(model);
         }
 
         [HttpGet]
