@@ -88,11 +88,11 @@ namespace TaskManager.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (model.ProjectClose == true)
+                if (model.ProjectClose == true && model.DateClose == null)
                 {
                     model.DateClose = DateTime.Now;
                 }
-                else
+                else if (model.ProjectClose == false && model.DateClose != null)
                 {
                     model.DateClose = null;
                 }
