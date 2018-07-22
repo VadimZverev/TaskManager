@@ -11,17 +11,13 @@ using TaskManager.Models;
 
 namespace TaskManager.Controllers
 {
-    public class HomeController : Controller
+    public class ProjectController : Controller
     {
         private DataContext context = new DataContext();
 
-        [HttpGet]
-        public async Task<ActionResult> ListProject()
+        public ActionResult Index()
         {
-            List<ListProjectViewModel> listProjectViewModel = new List<ListProjectViewModel>();
-            var projects = await context.Projects.ToListAsync();
-            var model = Mapper.Map(projects, listProjectViewModel);
-            return View(model);
+            return View();
         }
 
         [HttpGet]
@@ -113,9 +109,13 @@ namespace TaskManager.Controllers
             return View(model);
         }
 
-        public ActionResult Index()
+        [HttpGet]
+        public async Task<ActionResult> ListProject()
         {
-            return View();
+            List<ListProjectViewModel> listProjectViewModel = new List<ListProjectViewModel>();
+            var projects =  await context.Projects.ToListAsync();
+            var model = Mapper.Map(projects, listProjectViewModel);
+            return View(model);
         }
 
         protected override void Dispose(bool disposing)

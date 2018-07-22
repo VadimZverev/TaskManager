@@ -14,6 +14,7 @@ namespace TaskManager.Utils
         {
             Mapper.Initialize(cfg =>
             {
+                //___________________________________________________PROJECT_MAP___________________________________________________//
 
                 cfg.CreateMap<CreateProjectViewModel, Project>()
                     .ForMember(dest => dest.Name, opt => opt.MapFrom(f => f.Name))
@@ -38,6 +39,27 @@ namespace TaskManager.Utils
                     .ForMember(dest => dest.DateCreate, opt => opt.MapFrom(f => f.DateCreate))
                     .ForMember(dest => dest.DateClose, opt => opt.MapFrom(f => f.DateClose));
 
+                //___________________________________________________USER_MAP___________________________________________________//
+
+                cfg.CreateMap<User, ListUserViewModel>()
+                    .ForMember(dest => dest.Id, opt => opt.MapFrom(f => f.UserDataId))
+                    .ForMember(dest => dest.FIO, opt => opt.MapFrom(f => f.UserData.LastName + " " + f.UserData.FirstName + " " + f.UserData.MiddleName))
+                    .ForMember(dest => dest.Role, opt => opt.MapFrom(f => f.Role.Name));
+
+                cfg.CreateMap<UserData, UserDataDetailsViewModel>()
+                    .ForMember(dest => dest.Id, opt => opt.MapFrom(f => f.Id))
+                    .ForMember(dest => dest.FirstName, opt => opt.MapFrom(f => f.FirstName))
+                    .ForMember(dest => dest.LastName, opt => opt.MapFrom(f => f.LastName ?? "Не указано"))
+                    .ForMember(dest => dest.MiddleName, opt => opt.MapFrom(f => f.MiddleName ?? "Не указано"))
+                    .ForMember(dest => dest.Address, opt => opt.MapFrom(f => f.Address ?? "Не указано"))
+                    .ForMember(dest => dest.Birthday, opt => opt.MapFrom(f => f.Birthday))
+                    .ForMember(dest => dest.Phone, opt => opt.MapFrom(f => f.Phone))
+                    .ForMember(dest => dest.City, opt => opt.MapFrom(f => f.City ?? "Не указано"))
+                    .ForMember(dest => dest.Country, opt => opt.MapFrom(f => f.Country ?? "Не указано"));
+
+                cfg.CreateMap<CreateUserViewModel, User>()
+                    .ForMember(dest => dest.Login, opt => opt.MapFrom(f => f.Login))
+                    .ForMember(dest => dest.Password, opt => opt.MapFrom(f => f.Password));
             });
         }
     }
