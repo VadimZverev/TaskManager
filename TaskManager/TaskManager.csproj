@@ -178,6 +178,7 @@
     <Compile Include="Models\CreateProjectViewModel.cs" />
     <Compile Include="Models\CreateUserViewModel.cs" />
     <Compile Include="Models\EditProjectViewModel.cs" />
+    <Compile Include="Models\EditTaskViewModel.cs" />
     <Compile Include="Models\ListProjectViewModel.cs" />
     <Compile Include="Models\ListTaskViewModel.cs" />
     <Compile Include="Models\ListUserViewModel.cs" />
@@ -230,6 +231,7 @@
     <Content Include="Views\Accaunt\CreateUser.cshtml" />
     <Content Include="Views\Accaunt\EditUserData.cshtml" />
     <Content Include="Views\Home\ListTask.cshtml" />
+    <Content Include="Views\Home\TaskEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

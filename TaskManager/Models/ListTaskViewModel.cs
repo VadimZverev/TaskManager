@@ -26,7 +26,7 @@ namespace TaskManager.Models
         [Display(Name = "Приоритет")]
         public string Priority { get; set; }
 
-        [Display(Name = "Назначена")]
+        [Display(Name = "Назначен(а)")]
         public string User { get; set; }
 
         [Display(Name = "Статус")]

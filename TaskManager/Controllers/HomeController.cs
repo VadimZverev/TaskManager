@@ -61,7 +61,7 @@ namespace TaskManager.Controllers
                 return HttpNotFound();
             }
 
-            var project = context.Projects.Find(id);
+            var project = await context.Projects.FindAsync(id);
 
             if (project != null)
             {
@@ -113,6 +113,7 @@ namespace TaskManager.Controllers
             return View(model);
         }
 
+        [HttpGet]
         public async Task<ActionResult> ListTask(int? id)
         {
             if (id == null)
@@ -120,20 +121,39 @@ namespace TaskManager.Controllers
                 return HttpNotFound();
             }
 
-            List<ListTaskViewModel> listProjectViewModel = new List<ListTaskViewModel>();
+            List<ListTaskViewModel> listTaskViewModel = new List<ListTaskViewModel>();
 
             var tasks = await context.Tasks.Where(m => m.ProjectId == id).ToListAsync();
 
             if (tasks != null)
             {
                 var projectName = await context.Projects.FirstOrDefaultAsync(m => m.Id == id);
-                var model = Mapper.Map(tasks, listProjectViewModel);
+                var model = Mapper.Map(tasks, listTaskViewModel);
 
                 ViewBag.Project = projectName.Name;
 
                 return View(model);
             }
 
+            return RedirectToAction("ListProject");
+        }
+        
+
+        // Допилить метод
+        [HttpGet]
+        public async Task<ActionResult> TaskEdit(int? id)
+        {
+            if (id == null)
+            {
+                return HttpNotFound();
+            }
+
+            var task = await context.Tasks.FindAsync(id);
+            if (task != null)
+            {
+                //var taskEdit = Mapper.Map<Task, EditTaskViewModel>(task);
+                //return View(taskEdit);
+            }
             return RedirectToAction("ListProject");
         }
 
