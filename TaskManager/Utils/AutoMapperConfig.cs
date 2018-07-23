@@ -57,6 +57,17 @@ namespace TaskManager.Utils
                     .ForMember(dest => dest.City, opt => opt.MapFrom(f => f.City ?? "Не указано"))
                     .ForMember(dest => dest.Country, opt => opt.MapFrom(f => f.Country ?? "Не указано"));
 
+                cfg.CreateMap<UserDataDetailsViewModel, UserData> ()
+                    .ForMember(dest => dest.Id, opt => opt.MapFrom(f => f.Id))
+                    .ForMember(dest => dest.FirstName, opt => opt.MapFrom(f => f.FirstName))
+                    .ForMember(dest => dest.LastName, opt => opt.MapFrom(f => f.LastName ?? "Не указано"))
+                    .ForMember(dest => dest.MiddleName, opt => opt.MapFrom(f => f.MiddleName ?? "Не указано"))
+                    .ForMember(dest => dest.Address, opt => opt.MapFrom(f => f.Address ?? "Не указано"))
+                    .ForMember(dest => dest.Birthday, opt => opt.MapFrom(f => f.Birthday))
+                    .ForMember(dest => dest.Phone, opt => opt.MapFrom(f => f.Phone))
+                    .ForMember(dest => dest.City, opt => opt.MapFrom(f => f.City ?? "Не указано"))
+                    .ForMember(dest => dest.Country, opt => opt.MapFrom(f => f.Country ?? "Не указано"));
+
                 cfg.CreateMap<CreateUserViewModel, User>()
                     .ForMember(dest => dest.Login, opt => opt.MapFrom(f => f.Login))
                     .ForMember(dest => dest.Password, opt => opt.MapFrom(f => f.Password));

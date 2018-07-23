@@ -88,7 +88,7 @@ namespace TaskManager.Controllers
         }
 
         [HttpPost]
-        public ActionResult ProjectEdit(EditProjectViewModel model)
+        public async Task<ActionResult> ProjectEdit(EditProjectViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -105,7 +105,7 @@ namespace TaskManager.Controllers
 
                 context.Entry(project).State = EntityState.Modified;
 
-                context.SaveChanges();
+                await context.SaveChangesAsync();
 
                 return RedirectToAction("ListProject");
             }

@@ -13,6 +13,7 @@ namespace TaskManager.Models
         [HiddenInput(DisplayValue = false)]
         public int Id { get; set; }
 
+        [Required]
         [Display(Name ="Имя")]
         public string FirstName { get; set; }
 
@@ -29,7 +30,7 @@ namespace TaskManager.Models
         public DateTime? Birthday { get; set; }
 
         [Display(Name = "Мобильный")]
-        [DataType(DataType.Password)]
+        [DataType(DataType.PhoneNumber)]
         public decimal? Phone { get; set; }
 
         [Display(Name = "Город")]

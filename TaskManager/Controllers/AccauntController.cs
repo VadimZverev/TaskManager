@@ -66,6 +66,45 @@ namespace TaskManager.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        public async Task<ActionResult> EditUserData(int? id)
+        {
+            if (id == null)
+            {
+                return HttpNotFound();
+            }
+
+            List<UserDataDetailsViewModel> UserDetails = new List<UserDataDetailsViewModel>();
+            var userData = await context.UserDatas.FindAsync(id);
+
+            if (userData != null)
+            {
+                var model = Mapper.Map<UserData, UserDataDetailsViewModel>(userData);
+                return View(model);
+            }
+
+            return RedirectToAction("ListProject");
+
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> EditUserData(UserDataDetailsViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var userData = Mapper.Map<UserDataDetailsViewModel, UserData>(model);
+
+                context.Entry(userData).State = EntityState.Modified;
+
+                await context.SaveChangesAsync();
+                var id = userData.Id;
+                return RedirectToAction("UserDataDetails", new { id = userData.Id });
+            }
+
+            return View(model);
+
+        }
+
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
