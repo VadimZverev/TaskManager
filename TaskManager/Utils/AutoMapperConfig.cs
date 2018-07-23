@@ -71,6 +71,19 @@ namespace TaskManager.Utils
                 cfg.CreateMap<CreateUserViewModel, User>()
                     .ForMember(dest => dest.Login, opt => opt.MapFrom(f => f.Login))
                     .ForMember(dest => dest.Password, opt => opt.MapFrom(f => f.Password));
+
+                //___________________________________________________TASK_MAP___________________________________________________//
+
+                cfg.CreateMap<Task, ListTaskViewModel>()
+                    .ForMember(dest => dest.Id, opt => opt.MapFrom(f => f.Id))
+                    .ForMember(dest => dest.Name, opt => opt.MapFrom(f => f.TaskName))
+                    .ForMember(dest => dest.Type, opt => opt.MapFrom(f => f.TaskType.Name))
+                    .ForMember(dest => dest.Description, opt => opt.MapFrom(f => f.Description))
+                    .ForMember(dest => dest.Priority, opt => opt.MapFrom(f => f.TaskPriority.Name))
+                    .ForMember(dest => dest.User, opt => opt.MapFrom(f => f.User.UserData.LastName + " " + f.User.UserData.FirstName + " " + f.User.UserData.MiddleName))
+                    .ForMember(dest => dest.Status, opt => opt.MapFrom(f => f.TaskStatus.Name))
+                    .ForMember(dest => dest.DateCreate, opt => opt.MapFrom(f => f.DateCreate))
+                    .ForMember(dest => dest.DateClose, opt => opt.MapFrom(f => f.DateClose ?? null));
             });
         }
     }

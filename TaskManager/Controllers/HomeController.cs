@@ -113,6 +113,30 @@ namespace TaskManager.Controllers
             return View(model);
         }
 
+        public async Task<ActionResult> ListTask(int? id)
+        {
+            if (id == null)
+            {
+                return HttpNotFound();
+            }
+
+            List<ListTaskViewModel> listProjectViewModel = new List<ListTaskViewModel>();
+
+            var tasks = await context.Tasks.Where(m => m.ProjectId == id).ToListAsync();
+
+            if (tasks != null)
+            {
+                var projectName = await context.Projects.FirstOrDefaultAsync(m => m.Id == id);
+                var model = Mapper.Map(tasks, listProjectViewModel);
+
+                ViewBag.Project = projectName.Name;
+
+                return View(model);
+            }
+
+            return RedirectToAction("ListProject");
+        }
+
         public ActionResult Index()
         {
             return View();
