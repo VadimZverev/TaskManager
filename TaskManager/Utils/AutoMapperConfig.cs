@@ -90,6 +90,9 @@ namespace TaskManager.Utils
 
                 cfg.CreateMap<EditTaskViewModel, Task>();
 
+                cfg.CreateMap<CreateTaskViewModel, Task>()
+                    .ForMember(dest => dest.DateCreate, opt => opt.MapFrom(f => DateTime.Now));
+                
             });
         }
     }

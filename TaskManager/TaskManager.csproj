@@ -176,6 +176,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\CreateProjectViewModel.cs" />
+    <Compile Include="Models\CreateTaskViewModel.cs" />
     <Compile Include="Models\CreateUserViewModel.cs" />
     <Compile Include="Models\EditProjectViewModel.cs" />
     <Compile Include="Models\EditTaskViewModel.cs" />
@@ -232,6 +233,7 @@
     <Content Include="Views\Accaunt\EditUserData.cshtml" />
     <Content Include="Views\Home\ListTask.cshtml" />
     <Content Include="Views\Home\TaskEdit.cshtml" />
+    <Content Include="Views\Home\CreateTask.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

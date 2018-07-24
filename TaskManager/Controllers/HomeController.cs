@@ -137,7 +137,57 @@ namespace TaskManager.Controllers
 
             return RedirectToAction("ListProject");
         }
-        
+
+        [HttpGet]
+        public async Task<ActionResult> CreateTask( int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction("ListProject");
+            }
+
+            ViewBag.ProjectId = id;
+
+            var types = await context.TaskTypes.ToListAsync();
+            var taskTypes = new SelectList(types, "Id", "Name");
+            ViewBag.TaskTypes = taskTypes;
+
+            var priorities = await context.TaskPriorities.ToListAsync();
+            var taskPriorities = new SelectList(priorities, "Id", "Name");
+            ViewBag.TaskPriorities = taskPriorities;
+
+            var users = await context.Users.ToListAsync();
+            var taskUser = new SelectList((from s in users
+                                           select new
+                                           {
+                                               s.Id,
+                                               Name = s.UserData.LastName + " " + s.UserData.FirstName + " " + s.UserData.MiddleName
+                                           }), "Id", "Name");
+            ViewBag.TaskUser = taskUser;
+
+            var statuses = await context.TaskStatuses.ToListAsync();
+            var taskStatuses = new SelectList(statuses, "Id", "Name");
+            ViewBag.TaskStatuses = taskStatuses;
+
+            return View();
+            
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> CreateTask(CreateTaskViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var task = Mapper.Map<CreateTaskViewModel, DAL.Task>(model);
+
+                context.Tasks.Add(task);
+                await context.SaveChangesAsync();
+
+                return RedirectToAction("ListTask", new { id = model.ProjectId });
+            }
+            return View();
+        }
+
         [HttpGet]
         public async Task<ActionResult> TaskEdit(int? id)
         {
