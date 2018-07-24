@@ -161,7 +161,9 @@ namespace TaskManager.Controllers
                                            select new
                                            {
                                                s.Id,
-                                               Name = s.UserData.LastName + " " + s.UserData.FirstName + " " + s.UserData.MiddleName
+                                               Name = s.UserData.LastName + " " 
+                                               + s.UserData.FirstName + " " 
+                                               + s.UserData.MiddleName
                                            }), "Id", "Name");
             ViewBag.TaskUser = taskUser;
 
