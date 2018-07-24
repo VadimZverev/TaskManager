@@ -30,7 +30,10 @@ namespace TaskManager.Models
         [Display(Name = "Статус")]
         public int Status { get; set; }
 
-        [Display(Name = "Дата создания")]
+        [Display(Name = "Закрыть задачу?")]
+        public bool TaskClose { get; set; }
+
+        [HiddenInput(DisplayValue = false)]
         public DateTime DateCreate { get; set; }
 
         [HiddenInput(DisplayValue = false)]

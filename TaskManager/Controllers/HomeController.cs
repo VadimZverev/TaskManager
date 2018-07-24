@@ -138,8 +138,6 @@ namespace TaskManager.Controllers
             return RedirectToAction("ListProject");
         }
         
-
-        // Допилить метод
         [HttpGet]
         public async Task<ActionResult> TaskEdit(int? id)
         {
@@ -149,12 +147,68 @@ namespace TaskManager.Controllers
             }
 
             var task = await context.Tasks.FindAsync(id);
+
             if (task != null)
             {
-                //var taskEdit = Mapper.Map<Task, EditTaskViewModel>(task);
-                //return View(taskEdit);
+                var types = await context.TaskTypes.ToListAsync();
+                var taskTypes = new SelectList(types, "Id", "Name", task.TaskTypeId);
+                ViewBag.TaskTypes = taskTypes;
+
+                var priorities = await context.TaskPriorities.ToListAsync();
+                var taskPriorities = new SelectList(priorities, "Id", "Name", task.TaskPriorityId);
+                ViewBag.TaskPriorities = taskPriorities;
+
+                var users = await context.Users.ToListAsync();
+                var taskUser = new SelectList((from s in users
+                                                     select new
+                                                     {
+                                                         s.Id,
+                                                         Name = s.UserData.LastName + " " + s.UserData.FirstName + " " + s.UserData.MiddleName
+                                                     }), "Id", "Name", task.UserId);
+                ViewBag.TaskUser = taskUser;
+
+                var statuses = await context.TaskStatuses.ToListAsync();
+                var taskStatuses = new SelectList(statuses, "Id", "Name", task.TaskStatusId);
+                ViewBag.TaskStatuses = taskStatuses;
+
+
+
+                var taskEdit = Mapper.Map<DAL.Task, EditTaskViewModel>(task);
+
+                if (taskEdit.DateClose != null)
+                {
+                    taskEdit.TaskClose = true;
+                }
+                return View(taskEdit);
             }
-            return RedirectToAction("ListProject");
+            return RedirectToAction("ListTask", new { id = task.ProjectId });
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> TaskEdit(EditTaskViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (model.TaskClose == true && model.DateClose == null)
+                {
+                    model.DateClose = DateTime.Now;
+                }
+                else if (model.TaskClose == false && model.DateClose != null)
+                {
+                    model.DateClose = null;
+                }
+
+                var task = Mapper.Map<EditTaskViewModel, DAL.Task>(model);
+
+                context.Entry(task).State = EntityState.Modified;
+
+                await context.SaveChangesAsync();
+
+                return RedirectToAction("ListTask", new { id = model.ProjectId });
+            }
+
+            return View(model);
+
         }
 
         public ActionResult Index()

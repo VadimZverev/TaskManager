@@ -85,13 +85,10 @@ namespace TaskManager.Utils
                     .ForMember(dest => dest.DateCreate, opt => opt.MapFrom(f => f.DateCreate))
                     .ForMember(dest => dest.DateClose, opt => opt.MapFrom(f => f.DateClose ?? null));
 
-                // Допилить автомапер для редактирования задачи.
-                //cfg.CreateMap<Task, EditTaskViewModel>()
-                //    .ForMember(dest => dest.Id, opt => opt.MapFrom(f => f.Id))
-                //    .ForMember(dest => dest.TaskName, opt => opt.MapFrom(f => f.Name))
-                //    .ForMember(dest => dest.ProjectManager, opt => opt.MapFrom(f => f.User.UserData.LastName + " " + f.User.UserData.FirstName + " " + f.User.UserData.MiddleName))
-                //    .ForMember(dest => dest.DateCreate, opt => opt.MapFrom(f => f.DateCreate))
-                //    .ForMember(dest => dest.DateClose, opt => opt.MapFrom(f => f.DateClose ?? null));
+                cfg.CreateMap<Task, EditTaskViewModel>()
+                    .ForMember(dest => dest.DateClose, opt => opt.MapFrom(f => f.DateClose ?? null));
+
+                cfg.CreateMap<EditTaskViewModel, Task>();
 
             });
         }
