@@ -15,6 +15,16 @@ namespace TaskManager.Controllers
     {
         private DataContext context = new DataContext();
 
+        [HttpPost]
+        public ActionResult ProjectSearch(string name)
+        {
+            List<ListProjectViewModel> listProjectViewModel = new List<ListProjectViewModel>();
+            var allProject = context.Projects.Where(m => m.User.UserData.FirstName.Contains(name)).ToList();
+            var model = Mapper.Map(allProject, listProjectViewModel);
+
+            return PartialView(model);
+        }
+
         [HttpGet]
         public async Task<ActionResult> ListProject()
         {
