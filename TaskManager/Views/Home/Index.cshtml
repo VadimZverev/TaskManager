@@ -37,12 +37,18 @@
     <input type="text" name="name" />
     <input type="submit" value="Поиск" />
     <p id="loading" style="display: none;">
-        <img 
-             title="Идет загрузка..."
+        <img title="Идет загрузка..."
              src="@Url.Content("~/Content/img/loading.gif")"
              style="width: 40px; height: 40px;" />
         Идет загрузка...
     </p>
 }
-
+<p></p>
 <div id="results"></div>
+<div id="taskRes"></div>
+
+
+@section Scripts {
+    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
+
+}
