@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<TaskManager.Models.ListProjectViewModel>
 
 @{
-    ViewBag.Title = "ListProject";
+    ViewBag.Title = "Список проектов";
 }
 
-<h2>ListProject</h2>
+<h2>Список проектов</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Создать новый проект", "CreateProject")
 </p>
 <table class="table">
     <tr>
@@ -41,11 +41,12 @@
             @Html.DisplayFor(modelItem => item.DateClose)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+            @Html.ActionLink("Редактировать", "ProjectEdit", new { id = item.Id }) |
+            @Html.ActionLink("Список задач", "ListTask", new { id = item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
         </td>
     </tr>
 }
 
 </table>
+

@@ -4,8 +4,11 @@
     ViewBag.Title = "Список пользователей";
 }
 
-<h2>Список пользователей</h2>
+<h2>Список пользователей:</h2>
 
+<p>
+    @Html.ActionLink("Создать создать нового пользователя", "CreateUser")
+</p>
 
 <table class="table">
     <tr>
@@ -27,9 +30,23 @@
             @Html.DisplayFor(modelItem => item.Role)
         </td>
         <td>
-            @Html.ActionLink("Подробнее", "UserDataDetails", new { id=item.Id })
+            <div>
+
+                <span class="ico-back icon-button"></span>
+                <span class="ico-edit icon-button" data-id=@item.Id></span>
+                <span class="ico-delete icon-button" data-id=@item.Id></span>
+
+            </div>
+
+            @Html.ActionLink("Подробнее", "UserDataDetails", new { id = item.Id })
         </td>
     </tr>
 }
 
 </table>
+
+@section script{
+
+    @Scripts.Render("~/Content/Script/TaskManager.js")
+
+    }

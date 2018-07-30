@@ -22,3 +22,67 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.icon-button {
+    width: 25px;
+    height: 25px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.ico-info {
+    background-image: url(../Content/img/info_item.png);
+}
+
+.ico-back {
+    background-image: url(../Content/img/back_item.png);
+}
+
+.ico-delete {
+    background-image: url(../Content/img/delete_item.png);
+}
+
+.ico-edit {
+    background-image: url(../Content/img/edit_item.png);
+}
+
+/*.table-test {
+    border: 2px solid #080808;
+    margin-left: 5px;
+    margin-right: 99px;
+    margin-top: 17px;
+    margin-bottom: 33px;
+}*/
+
+/*.container {
+    display: flex;
+}
+
+.container-details {
+    display: unset;
+}*/
+
+.modals {
+    display: none;
+    text-align: center;
+    color: white;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1050;
+    background-color: rgba(0, 0, 0, 0.54);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+.modals-content {
+    width: 100%;
+    height: 100%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}

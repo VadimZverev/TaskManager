@@ -105,6 +105,36 @@ namespace TaskManager.Controllers
 
         }
 
+
+        // При удалении есть конфликт таблиц, надо пересмотреть отношения таблиц.
+        [HttpPost]
+        public JsonResult DeleteUser(int id)
+        {
+            try
+            {
+                using (DataContext context = new DataContext())
+                {
+                    var user = context.Users.Where(x => x.Id == id).FirstOrDefault();
+                    //var userData = context.UserDatas.Where(x => x.Id == user.UserDataId).FirstOrDefault();
+
+                    if (user == null)
+                    {
+                        return Json(new { result = false });
+                    }
+
+                    context.Users.Remove(user);
+                    //context.UserDatas.Remove(userData);
+                    context.SaveChanges();
+
+                    return Json(new { result = true });
+                }
+            }
+            catch (Exception exc)
+            {
+                return Json(exc.Message);
+            }
+        }
+
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
