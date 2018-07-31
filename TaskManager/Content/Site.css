@@ -90,3 +90,9 @@ textarea {
     margin-top: 10%;
     margin-left: 20%;
 }
+
+#loading {
+    display: none;
+    z-index: 1000;
+    position: absolute;
+}

@@ -32,18 +32,11 @@
 
 <h4>Поиск:</h4>
 
-@using (Ajax.BeginForm("ProjectSearch", new AjaxOptions { UpdateTargetId = "results", LoadingElementId = "loading", LoadingElementDuration = 1000 }))
-{
-    <input type="text" name="name" />
-    <input type="submit" value="Поиск" />
-
-    <div id="loading" class="modals">
-        <div class="modals-content">
-            <img title="Идет загрузка..."
-                 src="@Url.Content("~/Content/img/loading.gif")" />
-        </div>
-    </div>
-}
+@*@using (Ajax.BeginForm("ProjectSearch", new AjaxOptions { UpdateTargetId = "results", LoadingElementId = "loading", LoadingElementDuration = 1000 }))
+{*@
+    <input id="name" type="text" name="name" />
+    <input id="search" type="submit" value="Поиск" />
+@*}*@
 <p></p>
 <div id="results"></div>
 <div id="taskRes"></div>
@@ -51,5 +44,10 @@
 
 @section Scripts {
     @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
+
+}
+
+@section script{
+    @Scripts.Render("~/Content/Script/TaskManager.js")
 
 }

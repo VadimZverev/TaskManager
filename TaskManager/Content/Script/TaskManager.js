@@ -2,10 +2,11 @@
 
     // Редактирование проектов
     $(document).on('click', '.ico-edit', function (e) {
-
         e.preventDefault();
 
         var _id = $(this).data('id');
+
+        $("#loading").show();
 
         $.ajaxSetup({ cache: false });
 
@@ -14,13 +15,12 @@
             url: "/Home/ProjectEdit/",
             data: { id: _id },
             success: function (data) {
-
+                $("#loading").hide();
                 $('.modals-dialog').html(data);
                 $('.modal').modal('show');
             }
-        })
+        });
     });
-
 
     // возврат
     $(document).on('click', '.ico-back', function () {
@@ -53,11 +53,10 @@
                 url: "/Accaunt/DeleteProject/",
                 // передача в качестве объекта
                 // поля будут закодированые через encodeURIComponent автоматически
-                data: { id: _id }
-                ,
+                data: { id: _id },
                 success: function (data) {
 
-                    if (data.result == true) {
+                    if (data.result === true) {
                         el_tbody.find(el_tr).remove();
                     }
                     else {
@@ -73,5 +72,26 @@
                 }
             });
         }
+    });
+
+    $(document).on('click', '#search', function (e) {
+        e.preventDefault();
+
+        var name = $('#name').val();
+
+        $("#loading").show();
+
+        $.ajaxSetup({ cache: false });
+
+        $.ajax({
+            type: "POST",
+            url: "/Home/ProjectSearch/",
+            data: { name: name },
+            success: function (data) {
+                $("#loading").hide();
+                $('#results').html(data);
+            }
+        });
+
     });
 });

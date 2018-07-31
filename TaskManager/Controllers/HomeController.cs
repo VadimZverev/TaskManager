@@ -64,26 +64,26 @@ namespace TaskManager.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> ProjectEdit(int? id)
+        public ActionResult ProjectEdit(int? id)
         {
             if (id == null)
             {
                 return HttpNotFound();
             }
 
-            var project = await context.Projects.FindAsync(id);
+            var project = context.Projects.Find(id);
 
             if (project != null)
             {
 
-                var items = await context.Users.ToListAsync();
+                var items = context.Users.ToList();
 
                 var projectManager = new SelectList((from s in items
-                                                         select new
-                                                         {
-                                                             s.Id,
-                                                             Name = s.UserData.LastName + " " + s.UserData.FirstName + " " + s.UserData.MiddleName
-                                                         }), "Id", "Name", project.UserId);
+                                                     select new
+                                                     {
+                                                         s.Id,
+                                                         Name = s.UserData.LastName + " " + s.UserData.FirstName + " " + s.UserData.MiddleName
+                                                     }), "Id", "Name", project.UserId);
                 ViewBag.Items = projectManager;
                 var projectEdit = Mapper.Map<Project, EditProjectViewModel>(project);
 
