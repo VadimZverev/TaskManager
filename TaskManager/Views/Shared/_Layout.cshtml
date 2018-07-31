@@ -36,9 +36,15 @@
     </div>
 
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
     @RenderSection("script", required: false)
 
+
+
+    <div class="modal fade">
+        <div class="modals-dialog modals-window"></div>
+    </div>
 </body>
 </html>

@@ -30,23 +30,9 @@
             @Html.DisplayFor(modelItem => item.Role)
         </td>
         <td>
-            <div>
-
-                <span class="ico-back icon-button"></span>
-                <span class="ico-edit icon-button" data-id=@item.Id></span>
-                <span class="ico-delete icon-button" data-id=@item.Id></span>
-
-            </div>
-
             @Html.ActionLink("Подробнее", "UserDataDetails", new { id = item.Id })
         </td>
     </tr>
 }
 
 </table>
-
-@section script{
-
-    @Scripts.Render("~/Content/Script/TaskManager.js")
-
-    }

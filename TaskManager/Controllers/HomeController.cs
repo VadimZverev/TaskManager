@@ -91,7 +91,7 @@ namespace TaskManager.Controllers
                 {
                     projectEdit.ProjectClose = true;
                 }
-                return View(projectEdit);
+                return PartialView(projectEdit);
             }
 
             return RedirectToAction("ListProject");

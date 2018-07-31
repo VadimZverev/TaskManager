@@ -41,12 +41,18 @@
             @Html.DisplayFor(modelItem => item.DateClose)
         </td>
         <td>
-            @Html.ActionLink("Редактировать", "ProjectEdit", new { id = item.Id }) |
-            @Html.ActionLink("Список задач", "ListTask", new { id = item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                <span class="ico-edit icon-button" data-id=@item.Id></span>
+                <span class="ico-delete icon-button" data-id=@item.Id></span>
+
+            @Html.ActionLink("Список задач", "ListTask", new { id = item.Id })
         </td>
     </tr>
 }
 
 </table>
 
+@section script{
+
+    @Scripts.Render("~/Content/Script/TaskManager.js")
+
+    }

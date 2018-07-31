@@ -1,13 +1,28 @@
 ﻿$(document).ready(function () {
 
-    $(document).on('click', '.ico-edit', function () {
+    // Редактирование проектов
+    $(document).on('click', '.ico-edit', function (e) {
+
+        e.preventDefault();
+
         var _id = $(this).data('id');
-		window.location.host;
-        window.location.href = '/Accaunt/EditUserData/' + _id;
-		
-        console.log(window.location.href);
+
+        $.ajaxSetup({ cache: false });
+
+        $.ajax({
+            type: "GET",
+            url: "/Home/ProjectEdit/",
+            data: { id: _id },
+            success: function (data) {
+
+                $('.modals-dialog').html(data);
+                $('.modal').modal('show');
+            }
+        })
     });
 
+
+    // возврат
     $(document).on('click', '.ico-back', function () {
         var _id = $(this).data('id');
         window.location.host;
@@ -16,6 +31,7 @@
         console.log(window.location.href);
     });
 
+    // Данные пользователя
     $(document).on('click', '.ico-info', function () {
         var _id = $(this).data('id');
         window.location.host;
@@ -24,6 +40,7 @@
         console.log(window.location.href);
     });
 
+    // Удаление проекта
     $(document).on('click', '.ico-delete', function (e) {
         var _id = $(this).data('id');
         var el_tr = $(this).closest("tr");
@@ -33,7 +50,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "/Accaunt/DeleteUser/",
+                url: "/Accaunt/DeleteProject/",
                 // передача в качестве объекта
                 // поля будут закодированые через encodeURIComponent автоматически
                 data: { id: _id }
