@@ -64,6 +64,11 @@ textarea {
     background-image: url(../Content/img/tasklistCreate_item.png);
 }
 
+.ico-createProject {
+    background-image: url(../Content/img/createProject_item.png);
+}
+
+
 /*.table-test {
     border: 2px solid #080808;
     margin-left: 5px;

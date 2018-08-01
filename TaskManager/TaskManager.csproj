@@ -196,6 +196,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\img\back_item.png" />
+    <Content Include="Content\img\createProject_item.png" />
     <Content Include="Content\img\create_user_item.png" />
     <Content Include="Content\img\delete_item.png" />
     <Content Include="Content\img\details_item.png" />

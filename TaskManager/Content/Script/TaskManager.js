@@ -91,10 +91,6 @@
                     else {
                         alert("Данная запись не найдена.");
                     }
-
-                    console.log(data);
-                    console.log(data.msg);
-
                 },
                 error: function (data) {
                     alert('Нет ответа от сервера.');
@@ -137,6 +133,33 @@
             }
         });
     });
+
+    // Создание проекта.Необходимо обдумать добавление данных в таблицу без перегрузки страницы.
+    $(document).on('click', '#projectCreate', function (e) {
+        e.preventDefault();
+
+        //var el_tr = $(this).closest("tr");
+        //var el_tbody = $(el_tr).closest('tbody');
+
+        $("#loading").show();
+
+        $.ajax({
+            type: "GET",
+            url: "/Home/CreateProject/",
+            success: function (data) {
+
+                //el_tbody.find().append();
+
+                $("#loading").hide();
+                $('.modals-dialog').html(data);
+                $('.modal').modal('show');
+            },
+            error: function (data) {
+                alert('Нет ответа от сервера.');
+            }
+        });
+    });
+
 
     // Список задач по проекту
     $(document).on('click', '#projectTaskList', function (e) {

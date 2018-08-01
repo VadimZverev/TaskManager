@@ -35,9 +35,9 @@ namespace TaskManager.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> CreateProject()
+        public ActionResult CreateProject()
         {
-            var items = await context.Users.ToListAsync();
+            var items = context.Users.ToList();
             var projectManager = new SelectList((from s in items
                                                  select new
                                                  {
@@ -46,8 +46,9 @@ namespace TaskManager.Controllers
                                                  }), "Id", "Name", null);
 
             ViewBag.Items = projectManager;
-            return View();
+            return PartialView();
         }
+        // Сохранение проекта.Необходимо обдумать добавление данных в таблицу без перегрузки страницы.
 
         [HttpPost]
         public async Task<ActionResult> CreateProject(CreateProjectViewModel model)
@@ -272,7 +273,6 @@ namespace TaskManager.Controllers
 
         }
 
-        // Надо допилить.
         [HttpPost]
         public JsonResult TaskDelete(int id)
         {
