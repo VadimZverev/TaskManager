@@ -123,8 +123,7 @@ namespace TaskManager.Controllers
             return View(model);
         }
 
-        [HttpGet]
-        public async Task<ActionResult> ListTask(int? id)
+        public ActionResult ListTask(int? id)
         {
             if (id == null)
             {
@@ -133,16 +132,16 @@ namespace TaskManager.Controllers
 
             List<ListTaskViewModel> listTaskViewModel = new List<ListTaskViewModel>();
 
-            var tasks = await context.Tasks.Where(m => m.ProjectId == id).ToListAsync();
+            var tasks = context.Tasks.Where(m => m.ProjectId == id).ToList();
 
             if (tasks != null)
             {
-                var projectName = await context.Projects.FirstOrDefaultAsync(m => m.Id == id);
+                var projectName = context.Projects.FirstOrDefault(m => m.Id == id);
                 var model = Mapper.Map(tasks, listTaskViewModel);
 
                 ViewBag.Project = projectName.Name;
 
-                return View(model);
+                return PartialView(model);
             }
 
             return RedirectToAction("ListProject");
@@ -272,6 +271,31 @@ namespace TaskManager.Controllers
             return View(model);
 
         }
+
+        // Надо допилить.
+        [HttpPost]
+        public JsonResult TaskDelete(int id)
+        {
+            try
+            {
+                var task = context.Tasks.Where(x => x.Id == id).FirstOrDefault();
+
+                if (task == null)
+                {
+                    return Json(new { result = false });
+                }
+
+                context.Tasks.Remove(task);
+                context.SaveChanges();
+
+                return Json(new { result = true });
+            }
+            catch (Exception exc)
+            {
+                return Json(exc.Message);
+            }
+        }
+
 
         public ActionResult Index()
         {

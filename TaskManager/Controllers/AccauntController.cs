@@ -20,7 +20,7 @@ namespace TaskManager.Controllers
             List<ListUserViewModel> listUser = new List<ListUserViewModel>();
             var users = await context.Users.ToListAsync();
             var model = Mapper.Map(users, listUser);
-            return View(model);
+            return PartialView(model);
         }
 
         public async Task<ActionResult> UserDataDetails(int? id)
@@ -33,7 +33,7 @@ namespace TaskManager.Controllers
             List<UserDataDetailsViewModel> UserDetails = new List<UserDataDetailsViewModel>();
             var userData = await context.UserDatas.FindAsync(id);
             var model = Mapper.Map<UserData, UserDataDetailsViewModel>(userData);
-            return View(model);
+            return PartialView(model);
         }
 
         [HttpGet]
@@ -80,7 +80,7 @@ namespace TaskManager.Controllers
             if (userData != null)
             {
                 var model = Mapper.Map<UserData, UserDataDetailsViewModel>(userData);
-                return View(model);
+                return PartialView(model);
             }
 
             return RedirectToAction("ListProject");

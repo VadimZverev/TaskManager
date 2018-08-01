@@ -193,10 +193,13 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\img\back_item.png" />
+    <Content Include="Content\img\create_user_item.png" />
     <Content Include="Content\img\delete_item.png" />
+    <Content Include="Content\img\details_item.png" />
     <Content Include="Content\img\edit_item.png" />
     <Content Include="Content\img\info_item.png" />
     <Content Include="Content\img\loading.gif" />
+    <Content Include="Content\img\tasklist_item.png" />
     <Content Include="Content\Script\TaskManager.js" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />

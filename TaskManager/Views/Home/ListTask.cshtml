@@ -65,8 +65,8 @@
             @Html.DisplayFor(modelItem => item.DateClose)
         </td>
         <td>
-            @Html.ActionLink("Редактировать", "TaskEdit", new { id=item.Id }) |
-            @Html.ActionLink("Удалить", "TaskDelete", new { id=item.Id })
+            <span title="Редактировать задачу" id="TaskEdit" class="ico-edit icon-button" data-id=@item.Id></span>
+            <span title="Удалить задачу" id="TaskDelete" class="ico-delete icon-button" data-id=@item.Id></span>
         </td>
     </tr>
 }

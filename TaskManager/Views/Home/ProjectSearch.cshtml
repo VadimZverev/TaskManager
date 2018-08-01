@@ -27,9 +27,9 @@
             @Html.DisplayFor(modelItem => item.DateClose)
         </td>
         <td>
-            @Html.ActionLink("Редактировать", "ProjectEdit", new { id = item.Id }) |
-            @Html.ActionLink("Удалить", "ProjectDelete", new { id = item.Id }) |
-            @Ajax.ActionLink("Список задач", "ListTask", new { id = item.Id }, new AjaxOptions { UpdateTargetId= "taskRes", LoadingElementId = "loading", LoadingElementDuration = 1000 })
+            <span class="ico-edit icon-button" data-id=@item.Id></span>
+            <span class="ico-delete icon-button" data-id=@item.Id></span>
+            @Html.ActionLink("Список задач", "ListTask", new { id = item.Id })
         </td>
     </tr>
 }

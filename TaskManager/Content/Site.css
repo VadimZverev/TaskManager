@@ -48,6 +48,18 @@ textarea {
     background-image: url(../Content/img/edit_item.png);
 }
 
+.ico-details {
+    background-image: url(../Content/img/details_item.png);    
+}
+
+.ico-createUser {
+    background-image: url(../Content/img/create_user_item.png);
+}
+
+.ico-tasklist {
+    background-image: url(../Content/img/tasklist_item.png);
+}
+
 /*.table-test {
     border: 2px solid #080808;
     margin-left: 5px;

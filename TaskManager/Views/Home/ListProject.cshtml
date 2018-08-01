@@ -7,6 +7,7 @@
 <h2>Список проектов</h2>
 
 <p>
+    @*<span id="projectCreate" class="ico-createProject icon-button"></span>*@
     @Html.ActionLink("Создать новый проект", "CreateProject")
 </p>
 <table class="table">
@@ -41,10 +42,9 @@
             @Html.DisplayFor(modelItem => item.DateClose)
         </td>
         <td>
-                <span class="ico-edit icon-button" data-id=@item.Id></span>
-                <span class="ico-delete icon-button" data-id=@item.Id></span>
-
-            @Html.ActionLink("Список задач", "ListTask", new { id = item.Id })
+            <span title="Редактировать проект" id="projectEdit" class="ico-edit icon-button" data-id=@item.Id></span>
+            <span title="Список задач" id="projectTaskList" class="ico-tasklist icon-button" data-id=@item.Id></span>
+            <span title="Удалить проект" id="projectDelete" class="ico-delete icon-button" data-id=@item.Id></span>
         </td>
     </tr>
 }

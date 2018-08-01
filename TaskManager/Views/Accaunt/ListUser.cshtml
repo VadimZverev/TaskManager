@@ -7,7 +7,7 @@
 <h2>Список пользователей:</h2>
 
 <p>
-    @Html.ActionLink("Создать создать нового пользователя", "CreateUser")
+    <span title="Создать нового пользователя" id="сreateUser" class="ico-createUser icon-button"></span>
 </p>
 
 <table class="table">
@@ -30,7 +30,8 @@
             @Html.DisplayFor(modelItem => item.Role)
         </td>
         <td>
-            @Html.ActionLink("Подробнее", "UserDataDetails", new { id = item.Id })
+            <span id="userDataDetails" title="Подробнее" class="ico-details icon-button" data-id=@item.Id></span>
+            <span id="editUserData" title="Редактировать" class="ico-edit icon-button" data-id=@item.Id></span>
         </td>
     </tr>
 }
