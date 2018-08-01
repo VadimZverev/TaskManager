@@ -19,9 +19,12 @@
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
     <IISExpressSSLPort>44384</IISExpressSSLPort>
-    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
-    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
-    <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
+    <IISExpressAnonymousAuthentication>
+    </IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>
+    </IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode>
+    </IISExpressUseClassicPipelineMode>
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -199,6 +202,7 @@
     <Content Include="Content\img\edit_item.png" />
     <Content Include="Content\img\info_item.png" />
     <Content Include="Content\img\loading.gif" />
+    <Content Include="Content\img\tasklistCreate_item.png" />
     <Content Include="Content\img\tasklist_item.png" />
     <Content Include="Content\Script\TaskManager.js" />
     <Content Include="Content\themes\base\accordion.css" />

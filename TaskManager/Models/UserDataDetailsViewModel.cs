@@ -14,7 +14,7 @@ namespace TaskManager.Models
         public int Id { get; set; }
 
         [Required]
-        [Display(Name ="Имя")]
+        [Display(Name = "Имя")]
         public string FirstName { get; set; }
 
         [Display(Name = "Фамилия")]

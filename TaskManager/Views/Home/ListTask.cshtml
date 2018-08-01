@@ -1,13 +1,17 @@
 ﻿@model IEnumerable<TaskManager.Models.ListTaskViewModel>
 
 @{
+    Layout = null;
+}
+
+@{
     ViewBag.Title = "Список задач";
 }
 
 <h2>Список задач по проекту @ViewBag.Project</h2>
 
 <p>
-    @Html.ActionLink("Новая задача", "CreateTask")
+    <span title="Новая задача" id="createTask" class="ico-tasklistCreate icon-button" data-id="@ViewBag.ProjectId"></span>
 </p>
 <table class="table">
     <tr>
@@ -38,37 +42,38 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Type)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Priority)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.User)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Status)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DateCreate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DateClose)
-        </td>
-        <td>
-            <span title="Редактировать задачу" id="TaskEdit" class="ico-edit icon-button" data-id=@item.Id></span>
-            <span title="Удалить задачу" id="TaskDelete" class="ico-delete icon-button" data-id=@item.Id></span>
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Priority)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateCreate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateClose)
+            </td>
+            <td>
+                <span title="Редактировать задачу" id="TaskEdit" class="ico-edit icon-button" data-id=@item.Id></span>
+                <span title="Удалить задачу" id="TaskDelete" class="ico-delete icon-button" data-id=@item.Id></span>
+            </td>
+        </tr>
+    }
 
 </table>

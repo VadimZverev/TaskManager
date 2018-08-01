@@ -52,7 +52,7 @@ namespace TaskManager.Controllers
                 {
                     Id = user.Id,
                     FirstName = user.Login
-                };                
+                };
                 user.RoleId = 1;
 
                 context.Users.Add(user);

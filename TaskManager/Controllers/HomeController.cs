@@ -44,7 +44,7 @@ namespace TaskManager.Controllers
                                                      s.Id,
                                                      Name = s.UserData.LastName + " " + s.UserData.FirstName + " " + s.UserData.MiddleName
                                                  }), "Id", "Name", null);
-            
+
             ViewBag.Items = projectManager;
             return View();
         }
@@ -119,7 +119,7 @@ namespace TaskManager.Controllers
 
                 return RedirectToAction("ListProject");
             }
-            
+
             return View(model);
         }
 
@@ -140,7 +140,7 @@ namespace TaskManager.Controllers
                 var model = Mapper.Map(tasks, listTaskViewModel);
 
                 ViewBag.Project = projectName.Name;
-
+                ViewBag.ProjectId = projectName.Id;
                 return PartialView(model);
             }
 
@@ -148,7 +148,7 @@ namespace TaskManager.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> CreateTask( int? id)
+        public async Task<ActionResult> CreateTask(int? id)
         {
             if (id == null)
             {
@@ -170,8 +170,8 @@ namespace TaskManager.Controllers
                                            select new
                                            {
                                                s.Id,
-                                               Name = s.UserData.LastName + " " 
-                                               + s.UserData.FirstName + " " 
+                                               Name = s.UserData.LastName + " "
+                                               + s.UserData.FirstName + " "
                                                + s.UserData.MiddleName
                                            }), "Id", "Name");
             ViewBag.TaskUser = taskUser;
@@ -180,8 +180,8 @@ namespace TaskManager.Controllers
             var taskStatuses = new SelectList(statuses, "Id", "Name");
             ViewBag.TaskStatuses = taskStatuses;
 
-            return View();
-            
+            return PartialView();
+
         }
 
         [HttpPost]
@@ -221,11 +221,11 @@ namespace TaskManager.Controllers
 
                 var users = await context.Users.ToListAsync();
                 var taskUser = new SelectList((from s in users
-                                                     select new
-                                                     {
-                                                         s.Id,
-                                                         Name = s.UserData.LastName + " " + s.UserData.FirstName + " " + s.UserData.MiddleName
-                                                     }), "Id", "Name", task.UserId);
+                                               select new
+                                               {
+                                                   s.Id,
+                                                   Name = s.UserData.LastName + " " + s.UserData.FirstName + " " + s.UserData.MiddleName
+                                               }), "Id", "Name", task.UserId);
                 ViewBag.TaskUser = taskUser;
 
                 var statuses = await context.TaskStatuses.ToListAsync();
@@ -304,7 +304,7 @@ namespace TaskManager.Controllers
 
         protected override void Dispose(bool disposing)
         {
-            
+
             base.Dispose(disposing);
         }
     }

@@ -44,7 +44,7 @@ namespace TaskManager.Utils
                     .ForMember(dest => dest.City, opt => opt.MapFrom(f => f.City ?? "Не указано"))
                     .ForMember(dest => dest.Country, opt => opt.MapFrom(f => f.Country ?? "Не указано"));
 
-                cfg.CreateMap<UserDataDetailsViewModel, UserData> ()
+                cfg.CreateMap<UserDataDetailsViewModel, UserData>()
                     .ForMember(dest => dest.LastName, opt => opt.MapFrom(f => f.LastName ?? "Не указано"))
                     .ForMember(dest => dest.MiddleName, opt => opt.MapFrom(f => f.MiddleName ?? "Не указано"))
                     .ForMember(dest => dest.Address, opt => opt.MapFrom(f => f.Address ?? "Не указано"))
@@ -70,7 +70,7 @@ namespace TaskManager.Utils
 
                 cfg.CreateMap<CreateTaskViewModel, Task>()
                     .ForMember(dest => dest.DateCreate, opt => opt.MapFrom(f => DateTime.Now));
-                
+
             });
         }
     }

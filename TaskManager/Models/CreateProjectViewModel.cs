@@ -13,7 +13,7 @@ namespace TaskManager.Models
 
         [Required]
         [StringLength(50)]
-        [Display(Name ="Имя проекта")]
+        [Display(Name = "Имя проекта")]
         public string Name { get; set; }
 
         [Display(Name = "Руководитель проекта")]

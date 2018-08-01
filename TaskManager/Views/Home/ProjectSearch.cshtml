@@ -15,23 +15,24 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.ProjectName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DateCreate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DateClose)
-        </td>
-        <td>
-            <span class="ico-edit icon-button" data-id=@item.Id></span>
-            <span class="ico-delete icon-button" data-id=@item.Id></span>
-            @Html.ActionLink("Список задач", "ListTask", new { id = item.Id })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProjectName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateCreate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateClose)
+            </td>
+            <td>
+                <span class="ico-edit icon-button" data-id=@item.Id></span>
+                <span class="ico-delete icon-button" data-id=@item.Id></span>
+                @Html.ActionLink("Список задач", "ListTask", new { id = item.Id })
+            </td>
+        </tr>
+    }
 
 </table>

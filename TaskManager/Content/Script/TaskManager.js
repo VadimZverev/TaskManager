@@ -69,7 +69,7 @@
         console.log(window.location.href);
     });
 
-    // Удаление задачи, пока не работает корректно. Допилить.
+    // Удаление задачи.
     $(document).on('click', '#TaskDelete', function (e) {
         var _id = $(this).data('id');
         var el_tr = $(this).closest("tr");
@@ -91,10 +91,10 @@
                     else {
                         alert("Данная запись не найдена.");
                     }
-                   
+
                     console.log(data);
                     console.log(data.msg);
-                    
+
                 },
                 error: function (data) {
                     alert('Нет ответа от сервера.');
@@ -119,8 +119,8 @@
                 $('#results').html(data);
                 $("#loading").hide();
             }
-            });
         });
+    });
 
     // Список проектов
     $(document).on('click', '#projectList', function (e) {
@@ -152,6 +152,26 @@
             success: function (data) {
                 $('#taskRes').html(data);
                 $("#loading").hide();
+            }
+        });
+    });
+
+    // Создание задачи по проекту.
+    $(document).on('click', '#createTask', function (e) {
+        e.preventDefault();
+
+        var _id = $(this).data('id');
+
+        $("#loading").show();
+
+        $.ajax({
+            type: "GET",
+            url: "/Home/CreateTask/",
+            data: { id: _id },
+            success: function (data) {
+                $("#loading").hide();
+                $('.modals-dialog').html(data);
+                $('.modal').modal('show');
             }
         });
     });

@@ -1,6 +1,10 @@
 ﻿@model IEnumerable<TaskManager.Models.ListProjectViewModel>
 
 @{
+    Layout = null;
+}
+
+@{
     ViewBag.Title = "Список проектов";
 }
 
@@ -27,32 +31,27 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.ProjectName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ProjectManager)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DateCreate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DateClose)
-        </td>
-        <td>
-            <span title="Редактировать проект" id="projectEdit" class="ico-edit icon-button" data-id=@item.Id></span>
-            <span title="Список задач" id="projectTaskList" class="ico-tasklist icon-button" data-id=@item.Id></span>
-            <span title="Удалить проект" id="projectDelete" class="ico-delete icon-button" data-id=@item.Id></span>
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProjectName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProjectManager)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateCreate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateClose)
+            </td>
+            <td>
+                <span title="Редактировать проект" id="projectEdit" class="ico-edit icon-button" data-id=@item.Id></span>
+                <span title="Список задач" id="projectTaskList" class="ico-tasklist icon-button" data-id=@item.Id></span>
+                <span title="Удалить проект" id="projectDelete" class="ico-delete icon-button" data-id=@item.Id></span>
+            </td>
+        </tr>
+    }
 
 </table>
-
-@section script{
-
-    @Scripts.Render("~/Content/Script/TaskManager.js")
-
-    }
