@@ -1,18 +1,13 @@
 ﻿@model IEnumerable<TaskManager.Models.ListProjectViewModel>
 
 @{
-    Layout = null;
-}
-
-@{
     ViewBag.Title = "Список проектов";
 }
 
 <h2>Список проектов</h2>
 
 <p>
-    <span id="projectCreate" class="ico-createProject icon-button"></span>
-    @*@Html.ActionLink("Создать новый проект", "CreateProject")*@
+    <span title="Новый проект" id="getProjectCreate" class="ico-createProject icon-button"></span>
 </p>
 <table class="table">
     <tr>
@@ -47,9 +42,10 @@
                 @Html.DisplayFor(modelItem => item.DateClose)
             </td>
             <td>
-                <span title="Редактировать проект" id="projectEdit" class="ico-edit icon-button" data-id=@item.Id></span>
-                <span title="Список задач" id="projectTaskList" class="ico-tasklist icon-button" data-id=@item.Id></span>
-                <span title="Удалить проект" id="projectDelete" class="ico-delete icon-button" data-id=@item.Id></span>
+                <span  hidden="hidden" id="idProject" data-id=@item.Id></span>
+                <span title="Редактировать проект" id="projectEdit" class="ico-edit icon-button"></span>
+                <span title="Список задач" id="projectTaskList" class="ico-tasklist icon-button"></span>
+                <span title="Удалить проект" id="projectDelete" class="ico-delete icon-button"></span>
             </td>
         </tr>
     }

@@ -34,7 +34,6 @@ namespace TaskManager.Controllers
             return View(model);
         }
 
-        [HttpGet]
         public ActionResult CreateProject()
         {
             var items = context.Users.ToList();
@@ -48,20 +47,38 @@ namespace TaskManager.Controllers
             ViewBag.Items = projectManager;
             return PartialView();
         }
-        // Сохранение проекта.Необходимо обдумать добавление данных в таблицу без перегрузки страницы.
 
+        // Сохранение проекта.Необходимо обдумать добавление данных в таблицу без перегрузки страницы.
         [HttpPost]
-        public async Task<ActionResult> CreateProject(CreateProjectViewModel model)
+        public JsonResult CreateProject(CreateProjectViewModel model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var project = Mapper.Map<CreateProjectViewModel, Project>(model);
-                context.Projects.Add(project);
-                await context.SaveChangesAsync();
-                return RedirectToAction("ListProject");
+                if (ModelState.IsValid)
+                {
+                    var project = Mapper.Map<CreateProjectViewModel, Project>(model);
+                    var user = context.UserDatas.Find(model.UserId);
+                    context.Projects.Add(project);
+                    context.SaveChanges();
+                    return Json(new
+                    {
+                        ProjectId = project.Id,
+                        ProjectName = model.Name,
+                        ProjectManager = user.LastName + " " +
+                                        user.FirstName + " " +
+                                        user.MiddleName,
+                        DateCreate = project.DateCreate.ToShortDateString(),
+                        result = true
+                    });
+                }
+
+                return Json(new { result = false });
+            }
+            catch (Exception exc)
+            {
+                return Json(new { exc.Message });
             }
 
-            return View();
         }
 
         [HttpGet]

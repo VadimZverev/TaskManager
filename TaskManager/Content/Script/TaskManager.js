@@ -4,7 +4,8 @@
     $(document).on('click', '#projectEdit', function (e) {
         e.preventDefault();
 
-        var _id = $(this).data('id');
+        var container = this.closest('td');
+        var _id = $(container).find('#idProject').data('id');
 
         $("#loading").show();
 
@@ -124,22 +125,14 @@
 
         $("#loading").show();
 
-        $.ajax({
-            type: "GET",
-            url: "/Home/ListProject/",
-            success: function (data) {
-                $('#results').html(data);
-                $("#loading").hide();
-            }
-        });
+        window.location.host;
+        window.location.href = '/Home/ListProject/';
+
     });
 
-    // Создание проекта.Необходимо обдумать добавление данных в таблицу без перегрузки страницы.
-    $(document).on('click', '#projectCreate', function (e) {
+    // Открытие создания проекта.
+    $(document).on('click', '#getProjectCreate', function (e) {
         e.preventDefault();
-
-        //var el_tr = $(this).closest("tr");
-        //var el_tbody = $(el_tr).closest('tbody');
 
         $("#loading").show();
 
@@ -147,8 +140,6 @@
             type: "GET",
             url: "/Home/CreateProject/",
             success: function (data) {
-
-                //el_tbody.find().append();
 
                 $("#loading").hide();
                 $('.modals-dialog').html(data);
@@ -160,12 +151,52 @@
         });
     });
 
+    // Добавление созданного проекта в представление.
+    $(document).on('click', '#postProjectCreate', function (e) {
+        e.preventDefault();
+
+        var container = this.closest('.modal-content');
+
+        var name = $(container).find('#Name').val();
+        var userId = $(container).find('#UserId').val();
+
+        console.log(name);
+        
+        $.ajax({
+            type: "POST",
+            url: "/Home/CreateProject/",
+            data: { Name: name, UserId: userId },
+            success: function (data) {
+
+                if (data.result == true) {
+                    $('.modal').modal('hide');
+                    $(document).find('tbody').append(
+                        '<tr><td>' + data.ProjectName + 
+                        '</td><td>' + data.ProjectManager + 
+                        '</td><td>' + data.DateCreate +
+                        '</td><td></td>' +
+                        '<td><span hidden = "hidden" id="idProject" data-id=' + data.ProjectId + '></span >' +
+                        '<span title="Редактировать проект" id="projectEdit" class="ico-edit icon-button">' +
+                        '</span><span title="Список задач" id="projectTaskList" class="ico-tasklist icon-button"></span>' +
+                        '<span title="Удалить проект" id="projectDelete" class="ico-delete icon-button"></span></td >'
+                    );
+                }
+                else {
+                    alert('Ошибка валидации.');
+                }
+            },
+            error: function (data) {
+                alert(data);
+            }
+        });
+    });
 
     // Список задач по проекту
     $(document).on('click', '#projectTaskList', function (e) {
         e.preventDefault();
 
-        var _id = $(this).data('id');
+        var container = this.closest('td');
+        var _id = $(container).find('#idProject').data('id');
 
         $("#loading").show();
 

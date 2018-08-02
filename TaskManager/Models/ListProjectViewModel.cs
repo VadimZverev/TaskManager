@@ -20,10 +20,10 @@ namespace TaskManager.Models
         public string ProjectManager { get; set; }
 
         [Display(Name = "Дата создания проекта")]
-        public DateTime DateCreate { get; set; }
+        public string DateCreate { get; set; }
 
         [Display(Name = "Дата завершения проекта")]
-        public DateTime? DateClose { get; set; }
+        public string DateClose { get; set; }
 
     }
 }
