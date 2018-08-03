@@ -29,8 +29,8 @@ namespace TaskManager.Utils
                     .ForMember(dest => dest.ProjectManager, opt => opt.MapFrom(f => f.User.UserData.LastName + " " + f.User.UserData.FirstName + " " + f.User.UserData.MiddleName))
                     .ForMember(dest => dest.DateClose, opt => opt.MapFrom(f => f.DateClose ?? null));
 
-                cfg.CreateMap<EditProjectViewModel, Project>()
-                    .ForMember(dest => dest.DateClose, opt => opt.MapFrom(f => DateTime.Now.ToShortDateString()));
+                cfg.CreateMap<EditProjectViewModel, Project>();
+
                 //___________________________________________________USER_MAP___________________________________________________//
 
                 cfg.CreateMap<User, ListUserViewModel>()

@@ -10,7 +10,7 @@ namespace TaskManager.Models
 {
     public class EditProjectViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "введите имя проекта")]
         [StringLength(50)]
         [Display(Name = "Имя проекта")]
         public string Name { get; set; }
@@ -22,7 +22,7 @@ namespace TaskManager.Models
         public bool ProjectClose { get; set; }
 
         [HiddenInput(DisplayValue = false)]
-        public DateTime DateCreate { get; set; }
+        public string DateCreate { get; set; }
 
         [HiddenInput(DisplayValue = false)]
         public DateTime? DateClose { get; set; }

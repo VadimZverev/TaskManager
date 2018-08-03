@@ -15,6 +15,7 @@ namespace TaskManager.Controllers
     {
         private DataContext context = new DataContext();
 
+        // Тестовый метод поиска проектов через поисковик.
         [HttpPost]
         public async Task<ActionResult> ProjectSearch(string name)
         {
@@ -25,32 +26,45 @@ namespace TaskManager.Controllers
             return PartialView(model);
         }
 
+        // Открытие списка проектов
         [HttpGet]
-        public async Task<ActionResult> ListProject()
+        public ActionResult ListProject()
         {
             List<ListProjectViewModel> listProjectViewModel = new List<ListProjectViewModel>();
-            var projects = await context.Projects.ToListAsync();
+            var projects = context.Projects.ToList();
             var model = Mapper.Map(projects, listProjectViewModel);
             return View(model);
         }
 
+        // Открытие окна создания проекта
         public ActionResult CreateProject()
         {
             var items = context.Users.ToList();
-            var projectManager = new SelectList((from s in items
-                                                 select new
-                                                 {
-                                                     s.Id,
-                                                     Name = s.UserData.LastName + " " + s.UserData.FirstName + " " + s.UserData.MiddleName
-                                                 }), "Id", "Name", null);
 
-            ViewBag.Items = projectManager;
+            var projectManager = new SelectList(
+                (from s in items
+                 select new
+                 {
+                     s.Id,
+                     Name = s.UserData.LastName + " " + s.UserData.FirstName + " " + s.UserData.MiddleName
+                 }), "Id", "Name", null);
+
+            Session["Items"] = projectManager;
+
             return PartialView();
         }
 
-        // Сохранение проекта.Необходимо обдумать добавление данных в таблицу без перегрузки страницы.
+
+        [HttpGet]
+        public JsonResult CheckProjectManager (string name)
+        {
+            var result = !(name == null);
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        // Сохранение созданного проекта.
         [HttpPost]
-        public JsonResult CreateProject(CreateProjectViewModel model)
+        public ActionResult CreateProject(CreateProjectViewModel model)
         {
             try
             {
@@ -60,6 +74,9 @@ namespace TaskManager.Controllers
                     var user = context.UserDatas.Find(model.UserId);
                     context.Projects.Add(project);
                     context.SaveChanges();
+
+                    Session["Items"] = null;
+
                     return Json(new
                     {
                         ProjectId = project.Id,
@@ -72,7 +89,7 @@ namespace TaskManager.Controllers
                     });
                 }
 
-                return Json(new { result = false });
+                return View(model);
             }
             catch (Exception exc)
             {
@@ -81,6 +98,7 @@ namespace TaskManager.Controllers
 
         }
 
+        // Открытие окна редактирование проекта
         [HttpGet]
         public ActionResult ProjectEdit(int? id)
         {
@@ -102,7 +120,8 @@ namespace TaskManager.Controllers
                                                          s.Id,
                                                          Name = s.UserData.LastName + " " + s.UserData.FirstName + " " + s.UserData.MiddleName
                                                      }), "Id", "Name", project.UserId);
-                ViewBag.Items = projectManager;
+
+                Session["Items"] = projectManager;
                 var projectEdit = Mapper.Map<Project, EditProjectViewModel>(project);
 
                 if (projectEdit.DateClose != null)
@@ -116,29 +135,50 @@ namespace TaskManager.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> ProjectEdit(EditProjectViewModel model)
+        public ActionResult ProjectEdit(EditProjectViewModel model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                if (model.ProjectClose == true && model.DateClose == null)
+                if (ModelState.IsValid)
                 {
-                    model.DateClose = DateTime.Now;
+                    if (model.ProjectClose == true && model.DateClose == null)
+                    {
+                        model.DateClose = DateTime.Now;
+                    }
+                    else if (model.ProjectClose == false && model.DateClose != null)
+                    {
+                        model.DateClose = null;
+                    }
+
+                    var project = Mapper.Map<EditProjectViewModel, Project>(model);
+                    var user = context.UserDatas.Find(model.UserId);
+
+                    Session["Items"] = null;
+
+                    //context.Entry(project).State = EntityState.Modified;
+
+                    //context.SaveChanges();
+
+                    return Json(new
+                    {
+                        ProjectId = project.Id,
+                        ProjectName = model.Name,
+                        ProjectManager = user.LastName + " " +
+                                        user.FirstName + " " +
+                                        user.MiddleName,
+                        DateCreate = project.DateCreate.ToShortDateString(),
+                        DateClose = project.DateClose.HasValue ? project.DateClose.Value.ToShortDateString() : ""
+                    });
+
                 }
-                else if (model.ProjectClose == false && model.DateClose != null)
-                {
-                    model.DateClose = null;
-                }
 
-                var project = Mapper.Map<EditProjectViewModel, Project>(model);
+                return PartialView(model);
 
-                context.Entry(project).State = EntityState.Modified;
-
-                await context.SaveChangesAsync();
-
-                return RedirectToAction("ListProject");
             }
-
-            return View(model);
+            catch (Exception exc)
+            {
+                return Json(new { exc.Message });
+            }
         }
 
         public ActionResult ListTask(int? id)

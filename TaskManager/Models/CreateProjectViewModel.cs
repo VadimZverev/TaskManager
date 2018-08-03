@@ -11,7 +11,7 @@ namespace TaskManager.Models
     public class CreateProjectViewModel
     {
 
-        [Required]
+        [Required(ErrorMessage = "Необходимо ввести имя проекта")]
         [StringLength(50)]
         [Display(Name = "Имя проекта")]
         public string Name { get; set; }
@@ -19,7 +19,7 @@ namespace TaskManager.Models
         [Display(Name = "Руководитель проекта")]
         public string ProjectManager { get; set; }
 
-
+        [Required(ErrorMessage = "Необходимо выбрать руководителя проекта")]
         public int UserId { get; set; }
         public virtual User User { get; set; }
     }
