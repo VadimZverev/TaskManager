@@ -10,7 +10,7 @@ namespace TaskManager.Models
 {
     public class CreateTaskViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Необходимо заполнить")]
         [Display(Name = "Задача")]
         public string TaskName { get; set; }
 
@@ -35,15 +35,19 @@ namespace TaskManager.Models
 
         public int ProjectId { get; set; }
 
+        [Required(ErrorMessage = "Необходимо выбрать")]
         public int TaskPriorityId { get; set; }
         public virtual TaskPriority TaskPriority { get; set; }
 
+        [Required(ErrorMessage = "Необходимо выбрать")]
         public int TaskStatusId { get; set; }
         public virtual TaskStatus TaskStatus { get; set; }
 
+        [Required(ErrorMessage = "Необходимо выбрать")]
         public int TaskTypeId { get; set; }
         public virtual TaskType TaskType { get; set; }
 
+        [Required(ErrorMessage = "Необходимо выбрать")]
         public int UserId { get; set; }
         public virtual User User { get; set; }
 

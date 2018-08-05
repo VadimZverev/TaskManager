@@ -17,10 +17,10 @@ namespace TaskManager.Controllers
 
         // Тестовый метод поиска проектов через поисковик.
         [HttpPost]
-        public async Task<ActionResult> ProjectSearch(string name)
+        public ActionResult ProjectSearch(string name)
         {
             List<ListProjectViewModel> listProjectViewModel = new List<ListProjectViewModel>();
-            var allProject = await context.Projects.Where(m => m.User.UserData.FirstName.Contains(name)).ToListAsync();
+            var allProject = context.Projects.Where(m => m.User.UserData.FirstName.Contains(name)).ToListAsync();
             var model = Mapper.Map(allProject, listProjectViewModel);
 
             return PartialView(model);
@@ -57,7 +57,7 @@ namespace TaskManager.Controllers
 
         // Сохранение созданного проекта.
         [HttpPost]
-        public ActionResult CreateProject(CreateProjectViewModel model)
+        public JsonResult CreateProject(CreateProjectViewModel model)
         {
             try
             {
@@ -128,8 +128,9 @@ namespace TaskManager.Controllers
             return RedirectToAction("ListProject");
         }
 
+        // Сохранение изменений проекта.
         [HttpPost]
-        public ActionResult ProjectEdit(EditProjectViewModel model)
+        public JsonResult ProjectEdit(EditProjectViewModel model)
         {
             try
             {
@@ -147,11 +148,10 @@ namespace TaskManager.Controllers
                     var project = Mapper.Map<EditProjectViewModel, Project>(model);
                     var user = context.UserDatas.Find(model.UserId);
 
-                    //context.Entry(project).State = EntityState.Modified;
+                    context.Entry(project).State = EntityState.Modified;
+                    context.SaveChanges();
 
-                    //context.SaveChanges();
-
-                    Session["Items"] = null;
+                    Session.Clear();
 
                     return Json(new
                     {
@@ -175,6 +175,30 @@ namespace TaskManager.Controllers
             }
         }
 
+        // Удаление проекта
+        public JsonResult ProjectDelete(int id)
+        {
+            try
+            {
+                var project = context.Projects.Where(x => x.Id == id).FirstOrDefault();
+
+                if (project == null)
+                {
+                    return Json(new { result = false });
+                }
+
+                context.Projects.Remove(project);
+                context.SaveChanges();
+
+                return Json(new { result = true });
+            }
+            catch (Exception exc)
+            {
+                return Json(exc.Message);
+            }
+        }
+
+        // Список задач по проекту.
         public ActionResult ListTask(int? id)
         {
             if (id == null)
@@ -186,19 +210,16 @@ namespace TaskManager.Controllers
 
             var tasks = context.Tasks.Where(m => m.ProjectId == id).ToList();
 
-            if (tasks != null)
-            {
-                var projectName = context.Projects.FirstOrDefault(m => m.Id == id);
-                var model = Mapper.Map(tasks, listTaskViewModel);
+            var projectName = context.Projects.FirstOrDefault(m => m.Id == id);
+            var model = Mapper.Map(tasks, listTaskViewModel);
 
-                ViewBag.Project = projectName.Name;
-                ViewBag.ProjectId = projectName.Id;
-                return PartialView(model);
-            }
+            ViewBag.Project = projectName.Name;
+            ViewBag.ProjectId = projectName.Id;
+            return PartialView(model);
 
-            return RedirectToAction("ListProject");
         }
 
+        // Открытие окна создания задачи.
         [HttpGet]
         public async Task<ActionResult> CreateTask(int? id)
         {
@@ -207,56 +228,86 @@ namespace TaskManager.Controllers
                 return RedirectToAction("ListProject");
             }
 
-            ViewBag.ProjectId = id;
+            Session["projectId"] = id;
 
             var types = await context.TaskTypes.ToListAsync();
-            var taskTypes = new SelectList(types, "Id", "Name");
-            ViewBag.TaskTypes = taskTypes;
+            Session["taskTypes"] = new SelectList(types, "Id", "Name");
 
             var priorities = await context.TaskPriorities.ToListAsync();
-            var taskPriorities = new SelectList(priorities, "Id", "Name");
-            ViewBag.TaskPriorities = taskPriorities;
+            Session["taskPriorities"] = new SelectList(priorities, "Id", "Name");
 
             var users = await context.Users.ToListAsync();
-            var taskUser = new SelectList((from s in users
-                                           select new
-                                           {
-                                               s.Id,
-                                               Name = s.UserData.LastName + " "
-                                               + s.UserData.FirstName + " "
-                                               + s.UserData.MiddleName
-                                           }), "Id", "Name");
-            ViewBag.TaskUser = taskUser;
+            Session["taskUser"] = new SelectList((from s in users
+                                                  select new
+                                                  {
+                                                      s.Id,
+                                                      Name = s.UserData.LastName + " "
+                                                      + s.UserData.FirstName + " "
+                                                      + s.UserData.MiddleName
+                                                  }), "Id", "Name");
 
             var statuses = await context.TaskStatuses.ToListAsync();
-            var taskStatuses = new SelectList(statuses, "Id", "Name");
-            ViewBag.TaskStatuses = taskStatuses;
+            Session["taskStatuses"] = new SelectList(statuses, "Id", "Name");
 
             return PartialView();
 
         }
 
+        // сохранение созданной задачи.
         [HttpPost]
-        public async Task<ActionResult> CreateTask(CreateTaskViewModel model)
+        public async Task<JsonResult> CreateTask(CreateTaskViewModel model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var task = Mapper.Map<CreateTaskViewModel, DAL.Task>(model);
 
-                context.Tasks.Add(task);
-                await context.SaveChangesAsync();
+                if (ModelState.IsValid)
+                {
+                    var task = Mapper.Map<CreateTaskViewModel, DAL.Task>(model);
+                    var type = await context.TaskTypes.FindAsync(model.TaskTypeId);
+                    var priority = await context.TaskPriorities.FindAsync(model.TaskPriorityId);
+                    var user = await context.UserDatas.FindAsync(model.UserId);
+                    var status = await context.TaskStatuses.FindAsync(model.TaskStatusId);
 
-                return RedirectToAction("ListTask", new { id = model.ProjectId });
+                    context.Tasks.Add(task);
+                    await context.SaveChangesAsync();
+
+                    Session.Clear();
+
+                    return Json(new
+                    {
+                        taskId = task.Id,
+                        taskName = model.TaskName,
+                        taskType = type.Name,
+                        description = model.Description,
+                        taskPriority = priority.Name,
+                        taskUser = user.LastName + " " +
+                                        user.FirstName + " " +
+                                        user.MiddleName,
+                        taskStatus = status.Name,
+                        DateCreate = model.DateCreate.ToShortDateString(),
+                        result = true
+                    });
+                }
+
+                return Json(new { result = false });
             }
-            return View();
+            catch (Exception exc)
+            {
+                return Json(new
+                {
+                    exc.Message
+                });
+            }
+
         }
 
+        // Открытие окна редактирование задачи.
         [HttpGet]
         public async Task<ActionResult> TaskEdit(int? id)
         {
             if (id == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("ListProject");
             }
 
             var task = await context.Tasks.FindAsync(id);
@@ -264,27 +315,23 @@ namespace TaskManager.Controllers
             if (task != null)
             {
                 var types = await context.TaskTypes.ToListAsync();
-                var taskTypes = new SelectList(types, "Id", "Name", task.TaskTypeId);
-                ViewBag.TaskTypes = taskTypes;
+                Session["taskTypes"] = new SelectList(types, "Id", "Name", task.TaskTypeId);
 
                 var priorities = await context.TaskPriorities.ToListAsync();
-                var taskPriorities = new SelectList(priorities, "Id", "Name", task.TaskPriorityId);
-                ViewBag.TaskPriorities = taskPriorities;
+                Session["taskPriorities"] = new SelectList(priorities, "Id", "Name", task.TaskPriorityId);
 
                 var users = await context.Users.ToListAsync();
-                var taskUser = new SelectList((from s in users
-                                               select new
-                                               {
-                                                   s.Id,
-                                                   Name = s.UserData.LastName + " " + s.UserData.FirstName + " " + s.UserData.MiddleName
-                                               }), "Id", "Name", task.UserId);
-                ViewBag.TaskUser = taskUser;
+                Session["taskUser"] = new SelectList((from s in users
+                                                      select new
+                                                      {
+                                                          s.Id,
+                                                          Name = s.UserData.LastName + " "
+                                                          + s.UserData.FirstName + " "
+                                                          + s.UserData.MiddleName
+                                                      }), "Id", "Name", task.UserId);
 
                 var statuses = await context.TaskStatuses.ToListAsync();
-                var taskStatuses = new SelectList(statuses, "Id", "Name", task.TaskStatusId);
-                ViewBag.TaskStatuses = taskStatuses;
-
-
+                Session["taskStatuses"] = new SelectList(statuses, "Id", "Name", task.TaskStatusId);
 
                 var taskEdit = Mapper.Map<DAL.Task, EditTaskViewModel>(task);
 
@@ -292,38 +339,68 @@ namespace TaskManager.Controllers
                 {
                     taskEdit.TaskClose = true;
                 }
-                return View(taskEdit);
+
+                return PartialView(taskEdit);
             }
             return RedirectToAction("ListTask", new { id = task.ProjectId });
         }
 
+        // Сохранение изменений задачи.
         [HttpPost]
-        public async Task<ActionResult> TaskEdit(EditTaskViewModel model)
+        public async Task<JsonResult> TaskEdit(EditTaskViewModel model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                if (model.TaskClose == true && model.DateClose == null)
+
+                if (ModelState.IsValid)
                 {
-                    model.DateClose = DateTime.Now;
+                    if (model.TaskClose == true && model.DateClose == null)
+                    {
+                        model.DateClose = DateTime.Now;
+                    }
+                    else if (model.TaskClose == false && model.DateClose != null)
+                    {
+                        model.DateClose = null;
+                    }
+
+                    var task = Mapper.Map<EditTaskViewModel, DAL.Task>(model);
+
+                    var type = await context.TaskTypes.FindAsync(model.TaskTypeId);
+                    var priority = await context.TaskPriorities.FindAsync(model.TaskPriorityId);
+                    var user = await context.UserDatas.FindAsync(model.UserId);
+                    var status = await context.TaskStatuses.FindAsync(model.TaskStatusId);
+
+                    context.Entry(task).State = EntityState.Modified;
+
+                    await context.SaveChangesAsync();
+
+                    Session.Clear();
+
+                    return Json(new
+                    {
+                        taskId = task.Id,
+                        taskName = model.TaskName,
+                        taskType = type.Name,
+                        description = model.Description,
+                        taskPriority = priority.Name,
+                        taskUser = user.LastName + " " +
+                                        user.FirstName + " " +
+                                        user.MiddleName,
+                        taskStatus = status.Name,
+                        DateCreate = model.DateCreate.ToShortDateString(),
+                        DateClose = model.DateClose.HasValue ? model.DateClose.Value.ToShortDateString() : "",
+                        result = true
+                    });
                 }
-                else if (model.TaskClose == false && model.DateClose != null)
-                {
-                    model.DateClose = null;
-                }
-
-                var task = Mapper.Map<EditTaskViewModel, DAL.Task>(model);
-
-                context.Entry(task).State = EntityState.Modified;
-
-                await context.SaveChangesAsync();
-
-                return RedirectToAction("ListTask", new { id = model.ProjectId });
+                return Json(new { result = false });
             }
-
-            return View(model);
-
+            catch (Exception exc)
+            {
+                return Json(new { exc.Message });
+            }
         }
 
+        // Удаление выбранной задачи.
         [HttpPost]
         public JsonResult TaskDelete(int id)
         {
@@ -346,7 +423,6 @@ namespace TaskManager.Controllers
                 return Json(exc.Message);
             }
         }
-
 
         public ActionResult Index()
         {

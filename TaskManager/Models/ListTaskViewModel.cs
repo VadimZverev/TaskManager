@@ -33,10 +33,10 @@ namespace TaskManager.Models
         public string Status { get; set; }
 
         [Display(Name = "Дата создания")]
-        public DateTime DateCreate { get; set; }
+        public string DateCreate { get; set; }
 
         [Display(Name = "Дата завершения")]
-        public DateTime? DateClose { get; set; }
+        public string DateClose { get; set; }
 
     }
 }

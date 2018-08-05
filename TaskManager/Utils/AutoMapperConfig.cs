@@ -62,7 +62,8 @@ namespace TaskManager.Utils
                     .ForMember(dest => dest.Priority, opt => opt.MapFrom(f => f.TaskPriority.Name))
                     .ForMember(dest => dest.User, opt => opt.MapFrom(f => f.User.UserData.LastName + " " + f.User.UserData.FirstName + " " + f.User.UserData.MiddleName))
                     .ForMember(dest => dest.Status, opt => opt.MapFrom(f => f.TaskStatus.Name))
-                    .ForMember(dest => dest.DateClose, opt => opt.MapFrom(f => f.DateClose ?? null));
+                    .ForMember(dest => dest.DateCreate, opt => opt.MapFrom(f => f.DateCreate.ToShortDateString()))
+                    .ForMember(dest => dest.DateClose, opt => opt.MapFrom(f => f.DateClose.HasValue ? f.DateClose.Value.ToShortDateString() : (string)null));
 
                 cfg.CreateMap<Task, EditTaskViewModel>()
                     .ForMember(dest => dest.DateClose, opt => opt.MapFrom(f => f.DateClose ?? null));

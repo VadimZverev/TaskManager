@@ -1,5 +1,36 @@
 ﻿$(document).ready(function () {
 
+    // поиск
+    $(document).on('click', '#search', function (e) {
+        e.preventDefault();
+
+        var name = $('#name').val();
+
+        $("#loading").show();
+
+        $.ajax({
+            type: "POST",
+            url: "/Home/ProjectSearch/",
+            data: { name: name },
+            success: function (data) {
+                $('#results').html(data);
+                $("#loading").hide();
+            }
+        });
+    });
+
+    /* ______________Работа с пользователями______________ */
+
+    // Список пользователей.
+    $(document).on('click', '#listUser', function (e) {
+        e.preventDefault();
+
+        $("#loading").show();
+
+        window.location.host;
+        window.location.href = '/Accaunt/ListUser/';
+    });
+
     // Подробности пользователя.
     $(document).on('click', '#userDataDetails', function (e) {
         e.preventDefault();
@@ -49,54 +80,7 @@
         console.log(window.location.href);
     });
 
-    // Удаление задачи.
-    $(document).on('click', '#TaskDelete', function (e) {
-        var _id = $(this).data('id');
-        var el_tr = $(this).closest("tr");
-        var el_tbody = $(el_tr).closest('tbody');
-
-        if (confirm("Вы действительно хотите удалить?")) {
-
-            $.ajax({
-                type: "POST",
-                url: "/Home/TaskDelete/",
-                // передача в качестве объекта
-                // поля будут закодированые через encodeURIComponent автоматически
-                data: { id: _id },
-                success: function (data) {
-
-                    if (data.result === true) {
-                        el_tbody.find(el_tr).remove();
-                    }
-                    else {
-                        alert("Данная запись не найдена.");
-                    }
-                },
-                error: function (data) {
-                    alert('Нет ответа от сервера.');
-                }
-            });
-        }
-    });
-
-    // поиск
-    $(document).on('click', '#search', function (e) {
-        e.preventDefault();
-
-        var name = $('#name').val();
-
-        $("#loading").show();
-
-        $.ajax({
-            type: "POST",
-            url: "/Home/ProjectSearch/",
-            data: { name: name },
-            success: function (data) {
-                $('#results').html(data);
-                $("#loading").hide();
-            }
-        });
-    });
+    /* ______________Работа с проектами______________ */
 
     // Список проектов
     $(document).on('click', '#projectList', function (e) {
@@ -110,7 +94,7 @@
     });
 
     // Cоздание нового проекта.
-    $(document).on('click', '#getProjectCreate', function (e) {
+    $(document).on('click', '#projectCreate', function (e) {
         e.preventDefault();
 
         $("#loading").show();
@@ -171,7 +155,7 @@
     });
 
     // Редактирование проекта.
-    $(document).on('click', '#getProjectEdit', function (e) {
+    $(document).on('click', '#projectEdit', function (e) {
         e.preventDefault();
 
         var container = this.closest('tr');
@@ -233,6 +217,35 @@
         });
     });
 
+    // Удаление проекта.
+    $(document).on('click', '#projectDelete', function (e) {
+        var container = this.closest('tr');
+        var _id = $(container).find('#idProject').data('id');
+
+        if (confirm("Вы действительно хотите удалить?")) {
+
+            $.ajax({
+                type: "POST",
+                url: "/Home/ProjectDelete/",
+                data: { id: _id },
+                success: function (data) {
+
+                    if (data.result === true) {
+                        $(container).remove();
+                    }
+                    else {
+                        alert("Данная запись не найдена.");
+                    }
+                },
+                error: function (data) {
+                    alert('Нет ответа от сервера.');
+                }
+            });
+        }
+    });
+
+    /* ______________Работа с задачами______________ */
+
     // Список задач по проекту
     $(document).on('click', '#projectTaskList', function (e) {
         e.preventDefault();
@@ -256,30 +269,165 @@
     $(document).on('click', '#createTask', function (e) {
         e.preventDefault();
 
+        var container = this.closest('tr');
         var _id = $(this).data('id');
 
         $("#loading").show();
 
-        $.ajax({
-            type: "GET",
-            url: "/Home/CreateTask/",
-            data: { id: _id },
-            success: function (data) {
-                $("#loading").hide();
-                $('.modals-dialog').html(data);
-                $('.modal').modal('show');
-            }
+        var url = "/Home/CreateTask/" + _id;
+
+        $('#myModalBodyDiv1').load(url, function () {
+
+            $('#myModal1').modal('show');
+            $("#loading").hide();
+
+            var $form = $('#myForm');
+            $.validator.unobtrusive.parse($form);
+
+            $('.close').on('click', function () {
+                $('.modal').modal('hide');
+                $('#myModalBodyDiv1').empty();
+            });
+
+            $form.submit(function () {
+
+                if ($form.valid()) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/CreateTask/",
+                        data: $(this).serialize(),
+                        success: function (data) {
+
+                            if (data.result === true) {
+                                $('.modal').modal('hide');
+                                $('#taskRes').find('tbody').append(
+                                    '<tr><td>' + data.taskName +
+                                    '</td><td>' + data.taskType +
+                                    '</td><td>' + data.description +
+                                    '</td><td>' + data.taskPriority +
+                                    '</td><td>' + data.taskUser +
+                                    '</td><td>' + data.taskStatus +
+                                    '</td><td>' + data.DateCreate +
+                                    '</td><td>' +
+                                    '</td><td></td>' +
+                                    '<td><span hidden = "hidden" id="idTask" data-id=' + data.taskId + '></span >' +
+                                    '<span title="Редактировать задачу" id="TaskEdit" class="ico-edit icon-button">' +
+                                    '</span><span title="Удалить задачу" id="TaskDelete" class="ico-delete icon-button"></span></td >'
+                                );
+
+                                console.log(data);
+
+                                $('#myModalBodyDiv1').empty();
+                            }
+                            else if (data.result === false) {
+                                alert('Ошибка валидации.');
+                            }
+                        },
+                        error: function (data) {
+                            alert(data.Message);
+                        }
+                    });
+                }
+                return false;
+            });
         });
     });
 
-    // Список пользователей.
-    $(document).on('click', '#listUser', function (e) {
+    // Редактирование задачи.
+    $(document).on('click', '#TaskEdit', function (e) {
         e.preventDefault();
+
+        var container = this.closest('tr');
+        var _id = $(container).find('#idTask').data('id');
 
         $("#loading").show();
 
-        window.location.host;
-        window.location.href = '/Accaunt/ListUser/';
+        var url = "/Home/TaskEdit/" + _id;
+
+        $('#myModalBodyDiv1').load(url, function () {
+            $('#myModal1').modal('show');
+
+            $("#loading").hide();
+
+            var $form = $('#myForm');
+            $.validator.unobtrusive.parse($form);
+
+            $('.close').on('click', function () {
+                $('.modal').modal('hide');
+                $('#myModalBodyDiv1').empty();
+            });
+
+            $form.submit(function () {
+
+                if ($form.valid()) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/TaskEdit/",
+                        data: $(this).serialize(),
+                        success: function (data) {
+
+                            if (data.result === true) {
+                                $('.modal').modal('hide');
+                                $(container).replaceWith(
+                                    '<tr><td>' + data.taskName +
+                                    '</td><td>' + data.taskType +
+                                    '</td><td>' + data.description +
+                                    '</td><td>' + data.taskPriority +
+                                    '</td><td>' + data.taskUser +
+                                    '</td><td>' + data.taskStatus +
+                                    '</td><td>' + data.DateCreate +
+                                    '</td><td>' + data.DateClose +
+                                    '</td><td></td>' +
+                                    '<td><span hidden = "hidden" id="idTask" data-id=' + data.taskId + '></span >' +
+                                    '<span title="Редактировать задачу" id="TaskEdit" class="ico-edit icon-button">' +
+                                    '</span><span title="Удалить задачу" id="TaskDelete" class="ico-delete icon-button"></span></td >'
+                                );
+
+                                $('#myModalBodyDiv1').empty();
+                            }
+                            else if (data.result === false) {
+                                alert('Ошибка валидации.');
+                            }
+                        },
+                        error: function (data) {
+                            alert(data.Message);
+                        }
+                    });
+                }
+                return false;
+            });
+
+        });
+    });
+
+    // Удаление задачи.
+    $(document).on('click', '#TaskDelete', function (e) {
+        var _id = $(this.closest('tr')).find('#idTask').data('id');
+        var el_tr = $(this).closest("tr");
+        var el_tbody = $(el_tr).closest('tbody');
+
+        if (confirm("Вы действительно хотите удалить?")) {
+
+            $.ajax({
+                type: "POST",
+                url: "/Home/TaskDelete/",
+                // передача в качестве объекта
+                // поля будут закодированые через encodeURIComponent автоматически
+                data: { id: _id },
+                success: function (data) {
+
+                    if (data.result === true) {
+                        el_tbody.find(el_tr).remove();
+                    }
+                    else {
+                        alert("Данная запись не найдена.");
+                    }
+                },
+                error: function (data) {
+                    alert('Нет ответа от сервера.');
+                }
+            });
+        }
     });
 
 });

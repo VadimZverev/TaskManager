@@ -11,7 +11,7 @@ namespace TaskManager.Models
     public class EditTaskViewModel
     {
 
-        [Required]
+        [Required(ErrorMessage = "Необходимо заполнить")]
         [Display(Name = "Задача")]
         public string TaskName { get; set; }
 

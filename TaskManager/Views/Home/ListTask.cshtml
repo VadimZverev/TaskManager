@@ -4,11 +4,7 @@
     Layout = null;
 }
 
-@{
-    ViewBag.Title = "Список задач";
-}
-
-<h2>Список задач по проекту @ViewBag.Project</h2>
+<h2>@ViewBag.Project. Список задач: </h2>
 
 <p>
     <span title="Новая задача" id="createTask" class="ico-tasklistCreate icon-button" data-id="@ViewBag.ProjectId"></span>
@@ -39,7 +35,9 @@
         <th>
             @Html.DisplayNameFor(model => model.DateClose)
         </th>
-        <th></th>
+        <th>
+            Действия
+        </th>
     </tr>
 
     @foreach (var item in Model)
@@ -70,8 +68,9 @@
                 @Html.DisplayFor(modelItem => item.DateClose)
             </td>
             <td>
-                <span title="Редактировать задачу" id="TaskEdit" class="ico-edit icon-button" data-id=@item.Id></span>
-                <span title="Удалить задачу" id="TaskDelete" class="ico-delete icon-button" data-id=@item.Id></span>
+                <span hidden="hidden" id="idTask" data-id=@item.Id></span>
+                <span title="Редактировать задачу" id="TaskEdit" class="ico-edit icon-button"></span>
+                <span title="Удалить задачу" id="TaskDelete" class="ico-delete icon-button"></span>
             </td>
         </tr>
     }
