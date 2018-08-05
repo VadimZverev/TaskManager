@@ -109,129 +109,127 @@
 
     });
 
-    // Открытие создания проекта.
+    // Cоздание нового проекта.
     $(document).on('click', '#getProjectCreate', function (e) {
         e.preventDefault();
 
         $("#loading").show();
 
-        $.ajax({
-            type: "GET",
-            url: "/Home/CreateProject/",
-            success: function (data) {
+        var url = "/Home/CreateProject/";
 
-                $("#loading").hide();
-                $('.modals-dialog').html(data);
-                $('.modal').modal('show');
-            },
-            error: function (data) {
-                alert('Нет ответа от сервера.');
-            }
+        $('#myModalBodyDiv1').load(url, function () {
+
+            $('#myModal1').modal('show');
+            $("#loading").hide();
+
+            var $form = $('#myForm');
+            $.validator.unobtrusive.parse($form);
+
+            $('.close').on('click', function () {
+                $('.modal').modal('hide');
+                $('#myModalBodyDiv1').empty();
+            });
+
+            $form.submit(function () {
+
+                if ($form.valid()) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/CreateProject/",
+                        data: $(this).serialize(),
+                        success: function (data) {
+
+                            if (data.result === true) {
+                                $('.modal').modal('hide');
+                                $(document).find('tbody').append(
+                                    '<tr><td>' + data.ProjectName +
+                                    '</td><td>' + data.ProjectManager +
+                                    '</td><td>' + data.DateCreate +
+                                    '</td><td></td>' +
+                                    '<td><span hidden = "hidden" id="idProject" data-id=' + data.ProjectId + '></span >' +
+                                    '<span title="Редактировать проект" id="getProjectEdit" class="ico-edit icon-button">' +
+                                    '</span><span title="Список задач" id="projectTaskList" class="ico-tasklist icon-button"></span>' +
+                                    '<span title="Удалить проект" id="projectDelete" class="ico-delete icon-button"></span></td >'
+                                );
+
+                                console.log(data);
+
+                                $('#myModalBodyDiv1').empty();
+                            }
+                            else if (data.result === false) {
+                                alert('Ошибка валидации.');
+                            }
+                        },
+                        error: function (data) {
+                            alert(data.Message);
+                        }
+                    });
+                }
+                return false;
+            });
         });
     });
 
-    // Добавление созданного проекта в представление.
-    $(document).on('click', '#postProjectCreate', function (e) {
-        e.preventDefault();
-
-        var container = this.closest('.modal-content');
-
-        var name = $(container).find('#Name').val();
-        var userId = $(container).find('#UserId').val();
-
-        console.log(name);
-        
-        $.ajax({
-            type: "POST",
-            url: "/Home/CreateProject/",
-            data: { Name: name, UserId: userId },
-            success: function (data) {
-
-                if (data.result == true) {
-                    $('.modal').modal('hide');
-                    $(document).find('tbody').append(
-                        '<tr><td>' + data.ProjectName + 
-                        '</td><td>' + data.ProjectManager + 
-                        '</td><td>' + data.DateCreate +
-                        '</td><td></td>' +
-                        '<td><span hidden = "hidden" id="idProject" data-id=' + data.ProjectId + '></span >' +
-                        '<span title="Редактировать проект" id="getProjectEdit" class="ico-edit icon-button">' +
-                        '</span><span title="Список задач" id="projectTaskList" class="ico-tasklist icon-button"></span>' +
-                        '<span title="Удалить проект" id="projectDelete" class="ico-delete icon-button"></span></td >'
-                    );
-                }
-                else (data.result == false)
-                {
-                    var abc = $(container).find
-                    var _id = $(this).data('id');
-
-                    alert('Ошибка валидации.');
-                }
-            },
-            error: function (data) {
-                alert(data);
-            }
-        });
-    });
-
-    // открытие окна редактирование проектов.
+    // Редактирование проекта.
     $(document).on('click', '#getProjectEdit', function (e) {
         e.preventDefault();
 
-        var container = this.closest('td');
+        var container = this.closest('tr');
         var _id = $(container).find('#idProject').data('id');
 
         $("#loading").show();
 
-        $.ajax({
-            type: "GET",
-            url: "/Home/ProjectEdit/",
-            data: { id: _id },
-            success: function (data) {
-                $("#loading").hide();
-                $('.modals-dialog').html(data);
-                $('.modal').modal('show');
-            }
-        });
-    });
+        var url = "/Home/ProjectEdit/" + _id;
 
-    // Изменение редактируемого проекта в представление. Необходимо допилить.
-    $(document).on('click', '#postProjectEdit', function (e) {
-        e.preventDefault();
+        $('#myModalBodyDiv1').load(url, function () {
+            $('#myModal1').modal('show');
 
-        var container = this.closest('.modal-content');
+            $("#loading").hide();
 
-        var name = $(container).find('#Name').val();
-        var userId = $(container).find('#UserId').val();
+            var $form = $('#myForm');
+            $.validator.unobtrusive.parse($form);
 
-        console.log(name);
+            $('.close').on('click', function () {
+                $('.modal').modal('hide');
+                $('#myModalBodyDiv1').empty();
+            });
 
-        $.ajax({
-            type: "POST",
-            url: "/Home/ProjectEdit/",
-            data: { Name: name, UserId: userId },
-            success: function (data) {
+            $form.submit(function () {
 
-                if (data.result == true) {
-                    $('.modal').modal('hide');
-                    $(document).find('tbody').append(
-                        '<tr><td>' + data.ProjectName +
-                        '</td><td>' + data.ProjectManager +
-                        '</td><td>' + data.DateCreate +
-                        '</td><td></td>' +
-                        '<td><span hidden = "hidden" id="idProject" data-id=' + data.ProjectId + '></span >' +
-                        '<span title="Редактировать проект" id="getProjectEdit" class="ico-edit icon-button">' +
-                        '</span><span title="Список задач" id="projectTaskList" class="ico-tasklist icon-button"></span>' +
-                        '<span title="Удалить проект" id="projectDelete" class="ico-delete icon-button"></span></td >'
-                    );
+                if ($form.valid()) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Home/ProjectEdit/",
+                        data: $(this).serialize(),
+                        success: function (data) {
+
+                            if (data.result === true) {
+                                $('.modal').modal('hide');
+                                $(container).replaceWith(
+                                    '<tr><td>' + data.ProjectName +
+                                    '</td><td>' + data.ProjectManager +
+                                    '</td><td>' + data.DateCreate +
+                                    '</td><td>' + data.DateClose +
+                                    '<td><span hidden = "hidden" id="idProject" data-id=' + data.ProjectId + '></span >' +
+                                    '<span title="Редактировать проект" id="getProjectEdit" class="ico-edit icon-button">' +
+                                    '</span><span title="Список задач" id="projectTaskList" class="ico-tasklist icon-button"></span>' +
+                                    '<span title="Удалить проект" id="projectDelete" class="ico-delete icon-button"></span></td >'
+                                );
+
+                                $('#myModalBodyDiv1').empty();
+                            }
+                            else if (data.result === false) {
+                                alert('Ошибка валидации.');
+                            }
+                        },
+                        error: function (data) {
+                            alert(data.Message);
+                        }
+                    });
                 }
-                else {
-                    alert('Ошибка валидации.');
-                }
-            },
-            error: function (data) {
-                alert(data);
-            }
+                return false;
+            });
+
         });
     });
 
@@ -280,14 +278,8 @@
 
         $("#loading").show();
 
-        $.ajax({
-            type: "GET",
-            url: "/Accaunt/ListUser/",
-            success: function (data) {
-                $('#results').html(data);
-                $("#loading").hide();
-            }
-        });
+        window.location.host;
+        window.location.href = '/Accaunt/ListUser/';
     });
 
 });

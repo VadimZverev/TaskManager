@@ -106,10 +106,9 @@ textarea {
     justify-content: center;
 }
 
-.modals-window {
-    width: 60%;
-    margin-top: 10%;
-    margin-left: 20%;
+.modal-center {
+    top: 50% !important;
+    transform:translateY(-50%) !important;
 }
 
 #loading {

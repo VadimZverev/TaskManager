@@ -49,18 +49,37 @@
         <div id="results"></div>
         <div id="taskRes"></div>
 
-        <div class="modal fade">
-            <div class="modals-dialog modals-window"></div>
-        </div>
+        <div id="myModal1" class="modal fade" role="dialog" data-backdrop="static" data-keyboard="false">
+            <div class="modal-dialog modal-center">
+                <div class="modal-content ">
+                    <div class="modal-header">
+                        <button class="close" data-dismiss="modal" area-hidden="true">X</button>
+                        <h4 class="modal-title">@Session["modaltitle"]</h4>
+                    </div>
+                    <div class="modal-body" id="myModalBodyDiv1">
 
+                    </div>
+                </div>
+            </div>
+
+
+            @*<div class="modal fade">
+                    <div class="modals-dialog modals-window">
+
+                    </div>
+                </div>*@
+
+            @*<footer>
+                    <p>&copy; @DateTime.Now.Year</p>
+                </footer>*@
+        </div>
         <hr />
-        @*<footer>
-                <p>&copy; @DateTime.Now.Year</p>
-            </footer>*@
+
     </div>
 
 
     @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/jqueryui")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)

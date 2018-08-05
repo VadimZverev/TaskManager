@@ -20,7 +20,7 @@ namespace TaskManager.Controllers
             List<ListUserViewModel> listUser = new List<ListUserViewModel>();
             var users = await context.Users.ToListAsync();
             var model = Mapper.Map(users, listUser);
-            return PartialView(model);
+            return View(model);
         }
 
         public async Task<ActionResult> UserDataDetails(int? id)

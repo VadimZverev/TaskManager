@@ -39,9 +39,11 @@ namespace TaskManager.Controllers
         // Открытие окна создания проекта
         public ActionResult CreateProject()
         {
-            var items = context.Users.ToList();
+            Session["modaltitle"] = "Новый проект";
 
-            var projectManager = new SelectList(
+            var items = context.Users.Where(m => m.Role.Name.Contains("Project Manager")).ToList();
+
+            Session["Items"] = new SelectList(
                 (from s in items
                  select new
                  {
@@ -49,17 +51,8 @@ namespace TaskManager.Controllers
                      Name = s.UserData.LastName + " " + s.UserData.FirstName + " " + s.UserData.MiddleName
                  }), "Id", "Name", null);
 
-            Session["Items"] = projectManager;
 
             return PartialView();
-        }
-
-
-        [HttpGet]
-        public JsonResult CheckProjectManager (string name)
-        {
-            var result = !(name == null);
-            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         // Сохранение созданного проекта.
@@ -89,7 +82,7 @@ namespace TaskManager.Controllers
                     });
                 }
 
-                return View(model);
+                return Json(new { result = false });
             }
             catch (Exception exc)
             {
@@ -111,17 +104,18 @@ namespace TaskManager.Controllers
 
             if (project != null)
             {
+                Session["modaltitle"] = "Редактировать проект:";
 
-                var items = context.Users.ToList();
+                var items = context.Users.Where(m => m.Role.Name.Contains("Project Manager")).ToList();
 
-                var projectManager = new SelectList((from s in items
-                                                     select new
-                                                     {
-                                                         s.Id,
-                                                         Name = s.UserData.LastName + " " + s.UserData.FirstName + " " + s.UserData.MiddleName
-                                                     }), "Id", "Name", project.UserId);
 
-                Session["Items"] = projectManager;
+                Session["Items"] = new SelectList((from s in items
+                                                   select new
+                                                   {
+                                                       s.Id,
+                                                       Name = s.UserData.LastName + " " + s.UserData.FirstName + " " + s.UserData.MiddleName
+                                                   }), "Id", "Name", project.UserId);
+
                 var projectEdit = Mapper.Map<Project, EditProjectViewModel>(project);
 
                 if (projectEdit.DateClose != null)
@@ -153,11 +147,11 @@ namespace TaskManager.Controllers
                     var project = Mapper.Map<EditProjectViewModel, Project>(model);
                     var user = context.UserDatas.Find(model.UserId);
 
-                    Session["Items"] = null;
-
                     //context.Entry(project).State = EntityState.Modified;
 
                     //context.SaveChanges();
+
+                    Session["Items"] = null;
 
                     return Json(new
                     {
@@ -167,13 +161,13 @@ namespace TaskManager.Controllers
                                         user.FirstName + " " +
                                         user.MiddleName,
                         DateCreate = project.DateCreate.ToShortDateString(),
-                        DateClose = project.DateClose.HasValue ? project.DateClose.Value.ToShortDateString() : ""
+                        DateClose = project.DateClose.HasValue ? project.DateClose.Value.ToShortDateString() : "",
+                        result = true
                     });
 
                 }
 
-                return PartialView(model);
-
+                return Json(new { result = false });
             }
             catch (Exception exc)
             {
