@@ -37,7 +37,7 @@
         $("#loading").show();
 
         window.location.host;
-        window.location.href = '/Accaunt/ListUser/';
+        window.location.href = '/Account/ListUser/';
     });
 
     // Подробности пользователя.
@@ -49,7 +49,7 @@
 
         $("#loading").show();
 
-        var url = "/Accaunt/UserDataDetails/" + _id;
+        var url = "/Account/UserDataDetails/" + _id;
         $('#myModalBodyDiv1').load(url, function () {
             $("#loading").hide();
             $('#myModal1').modal('show');
@@ -72,7 +72,7 @@
 
         $("#loading").show();
 
-        var url = "/Accaunt/EditUserData/" + _id;
+        var url = "/Account/EditUserData/" + _id;
 
         $('#myModalBodyDiv1').load(url, function () {
             $("#loading").hide();
@@ -93,7 +93,7 @@
                 if ($form.valid()) {
                     $.ajax({
                         type: "POST",
-                        url: "/Accaunt/EditUserData/",
+                        url: "/Account/EditUserData/",
                         data: $(this).serialize(),
                         success: function (data) {
 
@@ -127,6 +127,35 @@
         });
 
     });
+
+    // Удаление задачи. Пока что не работает из-за отношений таблиц.
+    $(document).on('click', '#deleteUser', function (e) {
+        var _id = $(this.closest('tr')).find('#idUser').data('id');
+        var el_tr = $(this).closest("tr");
+        var el_tbody = $(el_tr).closest('tbody');
+
+        if (confirm("Вы действительно хотите удалить?")) {
+
+            $.ajax({
+                type: "POST",
+                url: "/Home/DeleteUser/",
+                data: { id: _id },
+                success: function (data) {
+
+                    if (data.result === true) {
+                        el_tbody.find(el_tr).remove();
+                    }
+                    else {
+                        alert("Данная запись не найдена.");
+                    }
+                },
+                error: function (data) {
+                    alert('Нет ответа от сервера.');
+                }
+            });
+        }
+    });
+
 
     /* ______________Работа с проектами______________ */
 

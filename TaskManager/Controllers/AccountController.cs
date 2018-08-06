@@ -6,14 +6,51 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using TaskManager.DAL;
 using TaskManager.Models;
 
 namespace TaskManager.Controllers
 {
-    public class AccauntController : Controller
+    public class AccountController : Controller
     {
         private DataContext context = new DataContext();
+
+        // Открытие окна входа пользователя в систему.
+        public ActionResult Login()
+        {
+            return View();
+        }
+
+        // Вход пользователя в систему.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Login(LoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = context.Users.FirstOrDefault(u => u.Login == model.Name && u.Password == model.Password);
+
+                if (user != null)
+                {
+                    FormsAuthentication.SetAuthCookie(model.Name, true);
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Пользователя с таким логином и паролем нет");
+                }
+            }
+
+            return View(model);
+        }
+
+        // Выход пользователя из системы.
+        public ActionResult Logoff()
+        {
+            FormsAuthentication.SignOut();
+            return RedirectToAction("Index", "Home");
+        }
 
         // Открытие списка пользователей.
         public ActionResult ListUser()
@@ -92,6 +129,7 @@ namespace TaskManager.Controllers
 
         }
 
+        // Сохранение изменений данных пользователя.
         [HttpPost]
         public JsonResult EditUserData(UserDataDetailsViewModel model)
         {
@@ -104,15 +142,13 @@ namespace TaskManager.Controllers
                     context.Entry(userData).State = EntityState.Modified;
                     context.SaveChanges();
 
-                    var role = context.Users.Find(model.Id).Role.Name;
-
                     return Json(new
                     {
                         id = userData.Id,
                         fio = userData.LastName + " " +
                         userData.FirstName + " " +
                         userData.LastName,
-                        role,
+                        role = context.Users.Find(model.Id).Role.Name,
                         result = true
                     });
                 }
@@ -124,10 +160,7 @@ namespace TaskManager.Controllers
 
                 return Json(new { exc.Message });
             }
-
-
         }
-
 
         // При удалении есть конфликт таблиц, надо пересмотреть отношения таблиц.
         [HttpPost]
@@ -135,22 +168,19 @@ namespace TaskManager.Controllers
         {
             try
             {
-                using (DataContext context = new DataContext())
+                var user = context.Users.Where(x => x.Id == id).FirstOrDefault();
+                //var userData = context.UserDatas.Where(x => x.Id == user.UserDataId).FirstOrDefault();
+
+                if (user == null)
                 {
-                    var user = context.Users.Where(x => x.Id == id).FirstOrDefault();
-                    //var userData = context.UserDatas.Where(x => x.Id == user.UserDataId).FirstOrDefault();
-
-                    if (user == null)
-                    {
-                        return Json(new { result = false });
-                    }
-
-                    context.Users.Remove(user);
-                    //context.UserDatas.Remove(userData);
-                    context.SaveChanges();
-
-                    return Json(new { result = true });
+                    return Json(new { result = false });
                 }
+
+                context.Users.Remove(user);
+                //context.UserDatas.Remove(userData);
+                context.SaveChanges();
+
+                return Json(new { result = true });
             }
             catch (Exception exc)
             {
