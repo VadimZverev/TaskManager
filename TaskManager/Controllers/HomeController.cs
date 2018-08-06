@@ -20,7 +20,7 @@ namespace TaskManager.Controllers
         public ActionResult ProjectSearch(string name)
         {
             List<ListProjectViewModel> listProjectViewModel = new List<ListProjectViewModel>();
-            var allProject = context.Projects.Where(m => m.User.UserData.FirstName.Contains(name)).ToListAsync();
+            var allProject = context.Projects.Where(m => m.User.UserData.FirstName.Contains(name)).ToList();
             var model = Mapper.Map(allProject, listProjectViewModel);
 
             return PartialView(model);

@@ -12,7 +12,7 @@
         <th>
             @Html.DisplayNameFor(model => model.DateClose)
         </th>
-        <th></th>
+        <th>Действия</th>
     </tr>
 
     @foreach (var item in Model)
@@ -28,9 +28,10 @@
                 @Html.DisplayFor(modelItem => item.DateClose)
             </td>
             <td>
-                <span class="ico-edit icon-button" data-id=@item.Id></span>
-                <span class="ico-delete icon-button" data-id=@item.Id></span>
-                @Html.ActionLink("Список задач", "ListTask", new { id = item.Id })
+                <span hidden="hidden" id="idProject" data-id=@item.Id></span>
+                <span title="Редактировать проект" id="projectEdit" class="ico-edit icon-button"></span>
+                <span title="Список задач" id="projectTaskList" class="ico-tasklist icon-button"></span>
+                <span title="Удалить проект" id="projectDelete" class="ico-delete icon-button"></span>
             </td>
         </tr>
     }
