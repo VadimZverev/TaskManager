@@ -1,23 +1,61 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
+using TaskManager.DAL;
 
 namespace TaskManager.Models
 {
     public class CreateUserViewModel
     {
-        [Required]
+
+        [Required(ErrorMessage = "Необходимо ввести логин")]
         [Display(Name = "Логин")]
         public string Login { get; set; }
 
-        [Required]
-        [Display(Name = "пароль")]
+        [Required(ErrorMessage = "Необходимо ввести пароль")]
+        [Display(Name = "Пароль")]
         [StringLength(50, ErrorMessage = "Длина пароля должна быть не менее {2} символов.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        [Required]
-        [Compare("Password", ErrorMessage = "Пароль и подтверждение пароля не совпадают.")]
+        [Required(ErrorMessage = "Необходимо ввести пароль")]
+        [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "Пароль и подтверждение пароля не совпадают.")]
         [DataType(DataType.Password)]
         [Display(Name = "Подтверждение пароля")]
         public string PasswordConfirm { get; set; }
+
+        [Display(Name = "Права доступа")]
+        public string UserRole { get; set; }
+
+        [Required(ErrorMessage = "Необходим ввод имени")]
+        [Display(Name = "Имя")]
+        public string FirstName { get; set; }
+
+        [Display(Name = "Фамилия")]
+        public string LastName { get; set; }
+
+        [Display(Name = "Отчество")]
+        public string MiddleName { get; set; }
+
+        [Display(Name = "Адрес")]
+        public string Address { get; set; }
+
+        [Display(Name = "День рождения")]
+        public string Birthday { get; set; }
+
+        [Display(Name = "Мобильный")]
+        [DataType(DataType.PhoneNumber)]
+        public string Phone { get; set; }
+
+        [Display(Name = "Город")]
+        public string City { get; set; }
+
+        [Display(Name = "Страна")]
+        public string Country { get; set; }
+
+        [Required(ErrorMessage = "Необходимо выбрать роль пользователю")]
+        public int RoleId { get; set; }
+        public virtual Role Role { get; set; }
+
     }
 }

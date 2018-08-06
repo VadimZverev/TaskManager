@@ -17,5 +17,6 @@ namespace TaskManager.Models
 
         [Display(Name = "Уровень прав")]
         public string Role { get; set; }
+
     }
 }

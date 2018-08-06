@@ -27,7 +27,7 @@ namespace TaskManager.DAL
 
         public int UserDataId { get; set; }
 
-        public int RoleId { get; set; }
+        public int? RoleId { get; set; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Project> Projects { get; set; }

@@ -14,15 +14,15 @@ namespace TaskManager.DAL
         [StringLength(50)]
         public string TaskName { get; set; }
 
-        public int TaskTypeId { get; set; }
+        public int? TaskTypeId { get; set; }
 
         public string Description { get; set; }
 
-        public int TaskPriorityId { get; set; }
+        public int? TaskPriorityId { get; set; }
 
-        public int UserId { get; set; }
+        public int? UserId { get; set; }
 
-        public int TaskStatusId { get; set; }
+        public int? TaskStatusId { get; set; }
 
         public int ProjectId { get; set; }
 

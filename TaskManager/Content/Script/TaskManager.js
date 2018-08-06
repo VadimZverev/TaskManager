@@ -105,10 +105,10 @@
                                     '</td>' +
                                     '<td><span id="idUser" hidden = "hidden"  data-id=' + data.id + '></span >' +
                                     '<span title="Подробнее" id="userDataDetails" class="ico-details icon-button">' +
-                                    '</span><span title="Редактировать" id="editUserData" class="ico-edit icon-button"></span></td >'
+                                    '</span><span title="Редактировать" id="editUserData" class="ico-edit icon-button">' +
+                                    '</span><span title="Удалить пользователя" id="deleteUser" class="ico-delete icon-button">' +
+                                    '</span ></td >'
                                 );
-
-                                console.log(data);
 
                                 $('#myModalBodyDiv1').empty();
                             }
@@ -128,7 +128,7 @@
 
     });
 
-    // Удаление задачи. Пока что не работает из-за отношений таблиц.
+    // Удаление пользователя.
     $(document).on('click', '#deleteUser', function (e) {
         var _id = $(this.closest('tr')).find('#idUser').data('id');
         var el_tr = $(this).closest("tr");
@@ -138,7 +138,7 @@
 
             $.ajax({
                 type: "POST",
-                url: "/Home/DeleteUser/",
+                url: "/Account/DeleteUser/",
                 data: { id: _id },
                 success: function (data) {
 

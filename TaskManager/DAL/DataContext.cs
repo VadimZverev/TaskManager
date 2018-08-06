@@ -23,49 +23,9 @@ namespace TaskManager.DAL
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Project>()
-                .HasMany(e => e.Tasks)
-                .WithRequired(e => e.Project)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<Role>()
-                .HasMany(e => e.Users)
-                .WithRequired(e => e.Role)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<TaskPriority>()
-                .HasMany(e => e.Tasks)
-                .WithRequired(e => e.TaskPriority)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<TaskStatus>()
-                .HasMany(e => e.Tasks)
-                .WithRequired(e => e.TaskStatus)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<TaskType>()
-                .HasMany(e => e.Tasks)
-                .WithRequired(e => e.TaskType)
-                .WillCascadeOnDelete(false);
-
             modelBuilder.Entity<UserData>()
                 .Property(e => e.Phone)
                 .HasPrecision(18, 0);
-
-            modelBuilder.Entity<UserData>()
-                .HasMany(e => e.Users)
-                .WithRequired(e => e.UserData)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<User>()
-                .HasMany(e => e.Projects)
-                .WithRequired(e => e.User)
-                .WillCascadeOnDelete(false);
-
-            modelBuilder.Entity<User>()
-                .HasMany(e => e.Tasks)
-                .WithRequired(e => e.User)
-                .WillCascadeOnDelete(false);
         }
     }
 }

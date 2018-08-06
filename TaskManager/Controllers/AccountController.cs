@@ -79,6 +79,17 @@ namespace TaskManager.Controllers
         [HttpGet]
         public ActionResult CreateUser()
         {
+            var role = context.Roles.ToList();
+            ViewBag.userRole = new SelectList(role, "Id", "Name");
+
+            return View();
+        }
+
+        // Открытие окна регистарции пользователя(Регистрация анонимного пользователя).
+
+        [AllowAnonymous]
+        public ActionResult Register()
+        {            
             return View();
         }
 
@@ -147,7 +158,7 @@ namespace TaskManager.Controllers
                         id = userData.Id,
                         fio = userData.LastName + " " +
                         userData.FirstName + " " +
-                        userData.LastName,
+                        userData.MiddleName,
                         role = context.Users.Find(model.Id).Role.Name,
                         result = true
                     });
@@ -162,22 +173,22 @@ namespace TaskManager.Controllers
             }
         }
 
-        // При удалении есть конфликт таблиц, надо пересмотреть отношения таблиц.
+        // Удаление пользователя.
         [HttpPost]
         public JsonResult DeleteUser(int id)
         {
             try
             {
-                var user = context.Users.Where(x => x.Id == id).FirstOrDefault();
-                //var userData = context.UserDatas.Where(x => x.Id == user.UserDataId).FirstOrDefault();
+                //var user = context.Users.Where(x => x.Id == id).FirstOrDefault();
+                var userData = context.UserDatas.Where(x => x.Id == id).FirstOrDefault();
 
-                if (user == null)
+                if (userData == null)
                 {
                     return Json(new { result = false });
                 }
 
-                context.Users.Remove(user);
-                //context.UserDatas.Remove(userData);
+                //context.Users.Remove(user);
+                context.UserDatas.Remove(userData);
                 context.SaveChanges();
 
                 return Json(new { result = true });

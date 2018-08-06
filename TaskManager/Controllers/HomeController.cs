@@ -102,16 +102,16 @@ namespace TaskManager.Controllers
 
             if (project != null)
             {
-
                 var items = context.Users.Where(m => m.Role.Name.Contains("Project Manager")).ToList();
 
-
-                Session["Items"] = new SelectList((from s in items
-                                                   select new
-                                                   {
-                                                       s.Id,
-                                                       Name = s.UserData.LastName + " " + s.UserData.FirstName + " " + s.UserData.MiddleName
-                                                   }), "Id", "Name", project.UserId);
+                Session["projectUser"] = new SelectList((from s in items
+                                                         select new
+                                                         {
+                                                             s.Id,
+                                                             Name = s.UserData.LastName + " "
+                                                             + s.UserData.FirstName + " "
+                                                             + s.UserData.MiddleName
+                                                         }), "Id", "Name", project.UserId);
 
                 var projectEdit = Mapper.Map<Project, EditProjectViewModel>(project);
 
@@ -143,7 +143,7 @@ namespace TaskManager.Controllers
                     }
 
                     var project = Mapper.Map<EditProjectViewModel, Project>(model);
-                    var user = context.UserDatas.Find(model.UserId);
+                    var user = context.Users.Find(model.UserId);
 
                     context.Entry(project).State = EntityState.Modified;
                     context.SaveChanges();
@@ -154,9 +154,9 @@ namespace TaskManager.Controllers
                     {
                         ProjectId = project.Id,
                         ProjectName = model.Name,
-                        ProjectManager = user.LastName + " " +
-                                        user.FirstName + " " +
-                                        user.MiddleName,
+                        ProjectManager = user.UserData.LastName + " " +
+                                        user.UserData.FirstName + " " +
+                                        user.UserData.MiddleName,
                         DateCreate = project.DateCreate.ToShortDateString(),
                         DateClose = project.DateClose.HasValue ? project.DateClose.Value.ToShortDateString() : "",
                         result = true

@@ -20,7 +20,7 @@ namespace TaskManager.DAL
         [StringLength(50)]
         public string Name { get; set; }
 
-        public int UserId { get; set; }
+        public int? UserId { get; set; }
 
         public DateTime DateCreate { get; set; }
 

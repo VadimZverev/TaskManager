@@ -23,7 +23,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Type, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.TaskTypeId, Session["taskTypes"] as SelectList, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DropDownListFor(model => model.TaskTypeId, Session["taskTypes"] as SelectList, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.TaskTypeId, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -31,7 +31,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.TextAreaFor(model => model.Description, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -39,7 +39,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Priority, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.TaskPriorityId, Session["taskPriorities"] as SelectList, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DropDownListFor(model => model.TaskPriorityId, Session["taskPriorities"] as SelectList, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.TaskPriorityId, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -47,7 +47,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.TaskUser, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.UserId, Session["taskUser"] as SelectList, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DropDownListFor(model => model.UserId, Session["taskUser"] as SelectList, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.UserId, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -55,7 +55,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Status, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.TaskStatusId, Session["taskStatuses"] as SelectList, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DropDownListFor(model => model.TaskStatusId, Session["taskStatuses"] as SelectList, new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.TaskStatusId, "", new { @class = "text-danger" })
             </div>
         </div>

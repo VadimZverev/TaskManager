@@ -26,7 +26,7 @@ namespace TaskManager.Utils
                     .ForMember(dest => dest.DateClose, opt => opt.MapFrom(f => f.DateClose.HasValue ? f.DateClose.Value.ToShortDateString() : (string)null));
 
                 cfg.CreateMap<Project, EditProjectViewModel>()
-                    .ForMember(dest => dest.ProjectManager, opt => opt.MapFrom(f => f.User.UserData.LastName + " " + f.User.UserData.FirstName + " " + f.User.UserData.MiddleName))
+                    .ForMember(dest => dest.ProjectManager, opt => opt.MapFrom(f => f.UserId.HasValue ? f.User.UserData.LastName + " " + f.User.UserData.FirstName + " " + f.User.UserData.MiddleName : null))
                     .ForMember(dest => dest.DateClose, opt => opt.MapFrom(f => f.DateClose ?? null));
 
                 cfg.CreateMap<EditProjectViewModel, Project>();
@@ -60,7 +60,7 @@ namespace TaskManager.Utils
                     .ForMember(dest => dest.Name, opt => opt.MapFrom(f => f.TaskName))
                     .ForMember(dest => dest.Type, opt => opt.MapFrom(f => f.TaskType.Name))
                     .ForMember(dest => dest.Priority, opt => opt.MapFrom(f => f.TaskPriority.Name))
-                    .ForMember(dest => dest.User, opt => opt.MapFrom(f => f.User.UserData.LastName + " " + f.User.UserData.FirstName + " " + f.User.UserData.MiddleName))
+                    .ForMember(dest => dest.User, opt => opt.MapFrom(f => f.UserId.HasValue ? f.User.UserData.LastName + " " + f.User.UserData.FirstName + " " + f.User.UserData.MiddleName : null))
                     .ForMember(dest => dest.Status, opt => opt.MapFrom(f => f.TaskStatus.Name))
                     .ForMember(dest => dest.DateCreate, opt => opt.MapFrom(f => f.DateCreate.ToShortDateString()))
                     .ForMember(dest => dest.DateClose, opt => opt.MapFrom(f => f.DateClose.HasValue ? f.DateClose.Value.ToShortDateString() : (string)null));
