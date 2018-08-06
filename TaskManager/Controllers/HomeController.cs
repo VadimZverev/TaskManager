@@ -39,8 +39,6 @@ namespace TaskManager.Controllers
         // Открытие окна создания проекта
         public ActionResult CreateProject()
         {
-            Session["modaltitle"] = "Новый проект";
-
             var items = context.Users.Where(m => m.Role.Name.Contains("Project Manager")).ToList();
 
             Session["Items"] = new SelectList(
@@ -68,7 +66,7 @@ namespace TaskManager.Controllers
                     context.Projects.Add(project);
                     context.SaveChanges();
 
-                    Session["Items"] = null;
+                    Session.Clear();
 
                     return Json(new
                     {
@@ -104,7 +102,6 @@ namespace TaskManager.Controllers
 
             if (project != null)
             {
-                Session["modaltitle"] = "Редактировать проект:";
 
                 var items = context.Users.Where(m => m.Role.Name.Contains("Project Manager")).ToList();
 

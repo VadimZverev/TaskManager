@@ -1,5 +1,14 @@
 ﻿$(document).ready(function () {
 
+    // возврат, пока не используется.
+    $(document).on('click', '.ico-back', function () {
+        var _id = $(this).data('id');
+        window.location.host;
+        window.location.href = '/Home/Index/';
+
+        console.log(window.location.href);
+    });
+
     // поиск
     $(document).on('click', '#search', function (e) {
         e.preventDefault();
@@ -35,19 +44,22 @@
     $(document).on('click', '#userDataDetails', function (e) {
         e.preventDefault();
 
-        var _id = $(this).data('id');
+        var container = this.closest('td');
+        var _id = $(container).find('#idUser').data('id');
 
         $("#loading").show();
 
-        $.ajax({
-            type: "GET",
-            url: "/Accaunt/UserDataDetails/",
-            data: { id: _id },
-            success: function (data) {
-                $("#loading").hide();
-                $('.modals-dialog').html(data);
-                $('.modal').modal('show');
-            }
+        var url = "/Accaunt/UserDataDetails/" + _id;
+        $('#myModalBodyDiv1').load(url, function () {
+            $("#loading").hide();
+            $('#myModal1').modal('show');
+            $('.modal-title').html('Информация о пользователе');
+
+            $('.close').on('click', function () {
+                $('.modal').modal('hide');
+                $('.modal-title').empty();
+                $('#myModalBodyDiv1').empty();
+            });
         });
     });
 
@@ -55,29 +67,65 @@
     $(document).on('click', '#editUserData', function (e) {
         e.preventDefault();
 
-        var _id = $(this).data('id');
+        var container = this.closest('tr');
+        var _id = $(container).find('#idUser').data('id');
 
         $("#loading").show();
 
-        $.ajax({
-            type: "GET",
-            url: "/Accaunt/EditUserData/",
-            data: { id: _id },
-            success: function (data) {
-                $("#loading").hide();
-                $('.modals-dialog').html(data);
-                $('.modal').modal('show');
-            }
+        var url = "/Accaunt/EditUserData/" + _id;
+
+        $('#myModalBodyDiv1').load(url, function () {
+            $("#loading").hide();
+            $('#myModal1').modal('show');
+            $('.modal-title').html('Редактирование информации пользователя');
+
+            var $form = $('#myForm');
+            $.validator.unobtrusive.parse($form);
+
+            $('.close').on('click', function () {
+                $('.modal').modal('hide');
+                $('.modal-title').empty();
+                $('#myModalBodyDiv1').empty();
+            });
+
+            $form.submit(function () {
+
+                if ($form.valid()) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Accaunt/EditUserData/",
+                        data: $(this).serialize(),
+                        success: function (data) {
+
+                            if (data.result === true) {
+                                $('.modal').modal('hide');
+                                $(container).replaceWith(
+                                    '<tr><td>' + data.fio +
+                                    '</td><td>' + data.role +
+                                    '</td>' +
+                                    '<td><span id="idUser" hidden = "hidden"  data-id=' + data.id + '></span >' +
+                                    '<span title="Подробнее" id="userDataDetails" class="ico-details icon-button">' +
+                                    '</span><span title="Редактировать" id="editUserData" class="ico-edit icon-button"></span></td >'
+                                );
+
+                                console.log(data);
+
+                                $('#myModalBodyDiv1').empty();
+                            }
+                            else if (data.result === false) {
+                                alert('Ошибка валидации.');
+                            }
+                        },
+                        error: function (data) {
+                            alert(data);
+                        }
+                    });
+                }
+                return false;
+            });
+
         });
-    });
 
-    // возврат, пока не используется.
-    $(document).on('click', '.ico-back', function () {
-        var _id = $(this).data('id');
-        window.location.host;
-        window.location.href = '/Home/Index/';
-
-        console.log(window.location.href);
     });
 
     /* ______________Работа с проектами______________ */
@@ -103,14 +151,16 @@
 
         $('#myModalBodyDiv1').load(url, function () {
 
-            $('#myModal1').modal('show');
             $("#loading").hide();
+            $('.modal-title').html('Новый проект');
+            $('#myModal1').modal('show');
 
             var $form = $('#myForm');
             $.validator.unobtrusive.parse($form);
 
             $('.close').on('click', function () {
                 $('.modal').modal('hide');
+                $('.modal-title').empty();
                 $('#myModalBodyDiv1').empty();
             });
 
@@ -166,15 +216,16 @@
         var url = "/Home/ProjectEdit/" + _id;
 
         $('#myModalBodyDiv1').load(url, function () {
-            $('#myModal1').modal('show');
-
             $("#loading").hide();
+            $('#myModal1').modal('show');
+            $('.modal-title').html('Редактировать проект');
 
             var $form = $('#myForm');
             $.validator.unobtrusive.parse($form);
 
             $('.close').on('click', function () {
                 $('.modal').modal('hide');
+                $('.modal-title').empty();
                 $('#myModalBodyDiv1').empty();
             });
 
@@ -277,15 +328,16 @@
         var url = "/Home/CreateTask/" + _id;
 
         $('#myModalBodyDiv1').load(url, function () {
-
-            $('#myModal1').modal('show');
             $("#loading").hide();
+            $('#myModal1').modal('show');
+            $('.modal-title').html('Новая задача');
 
             var $form = $('#myForm');
             $.validator.unobtrusive.parse($form);
 
             $('.close').on('click', function () {
                 $('.modal').modal('hide');
+                $('.modal-title').empty();
                 $('#myModalBodyDiv1').empty();
             });
 
@@ -345,15 +397,16 @@
         var url = "/Home/TaskEdit/" + _id;
 
         $('#myModalBodyDiv1').load(url, function () {
-            $('#myModal1').modal('show');
-
             $("#loading").hide();
+            $('#myModal1').modal('show');
+            $('.modal-title').html('Редактировать задачу');
 
             var $form = $('#myForm');
             $.validator.unobtrusive.parse($form);
 
             $('.close').on('click', function () {
                 $('.modal').modal('hide');
+                $('.modal-title').empty();
                 $('#myModalBodyDiv1').empty();
             });
 

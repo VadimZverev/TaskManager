@@ -13,7 +13,7 @@ namespace TaskManager.Models
         [HiddenInput(DisplayValue = false)]
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage ="Необходим ввод имени")]
         [Display(Name = "Имя")]
         public string FirstName { get; set; }
 

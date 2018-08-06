@@ -15,14 +15,16 @@ namespace TaskManager.Controllers
     {
         private DataContext context = new DataContext();
 
-        public async Task<ActionResult> ListUser()
+        // Открытие списка пользователей.
+        public ActionResult ListUser()
         {
             List<ListUserViewModel> listUser = new List<ListUserViewModel>();
-            var users = await context.Users.ToListAsync();
+            var users = context.Users.ToList();
             var model = Mapper.Map(users, listUser);
             return View(model);
         }
 
+        // Просмотр информации о пользователе.
         public async Task<ActionResult> UserDataDetails(int? id)
         {
             if (id == null)
@@ -36,14 +38,16 @@ namespace TaskManager.Controllers
             return PartialView(model);
         }
 
+        // Создание пользователя (АдминМетод в будущем)
         [HttpGet]
         public ActionResult CreateUser()
         {
             return View();
         }
 
+        // Сохранение регистрационных данных.
         [HttpPost]
-        public async Task<ActionResult> CreateUser(CreateUserViewModel model)
+        public async Task<ActionResult> Register(CreateUserViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -66,16 +70,17 @@ namespace TaskManager.Controllers
             return View(model);
         }
 
+        // Открытие окна редактирования данных пользователя.
         [HttpGet]
-        public async Task<ActionResult> EditUserData(int? id)
+        public ActionResult EditUserData(int? id)
         {
             if (id == null)
             {
-                return HttpNotFound();
+                return RedirectToAction("ListUser");
             }
 
             List<UserDataDetailsViewModel> UserDetails = new List<UserDataDetailsViewModel>();
-            var userData = await context.UserDatas.FindAsync(id);
+            var userData = context.UserDatas.Find(id);
 
             if (userData != null)
             {
@@ -88,20 +93,38 @@ namespace TaskManager.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> EditUserData(UserDataDetailsViewModel model)
+        public JsonResult EditUserData(UserDataDetailsViewModel model)
         {
-            if (ModelState.IsValid)
+            try
             {
-                var userData = Mapper.Map<UserDataDetailsViewModel, UserData>(model);
+                if (ModelState.IsValid)
+                {
+                    var userData = Mapper.Map<UserDataDetailsViewModel, UserData>(model);
 
-                context.Entry(userData).State = EntityState.Modified;
+                    context.Entry(userData).State = EntityState.Modified;
+                    context.SaveChanges();
 
-                await context.SaveChangesAsync();
-                var id = userData.Id;
-                return RedirectToAction("UserDataDetails", new { id = userData.Id });
+                    var role = context.Users.Find(model.Id).Role.Name;
+
+                    return Json(new
+                    {
+                        id = userData.Id,
+                        fio = userData.LastName + " " +
+                        userData.FirstName + " " +
+                        userData.LastName,
+                        role,
+                        result = true
+                    });
+                }
+
+                return Json(new { result = false });
+            }
+            catch (Exception exc)
+            {
+
+                return Json(new { exc.Message });
             }
 
-            return View(model);
 
         }
 

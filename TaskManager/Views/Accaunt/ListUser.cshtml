@@ -18,7 +18,9 @@
         <th>
             @Html.DisplayNameFor(model => model.Role)
         </th>
-        <th></th>
+        <th>
+            Действия
+        </th>
     </tr>
 
     @foreach (var item in Model)
@@ -31,8 +33,9 @@
                 @Html.DisplayFor(modelItem => item.Role)
             </td>
             <td>
-                <span id="userDataDetails" title="Подробнее" class="ico-details icon-button" data-id=@item.Id></span>
-                <span id="editUserData" title="Редактировать" class="ico-edit icon-button" data-id=@item.Id></span>
+                <span id="idUser" hidden="hidden" data-id="@item.Id"></span>
+                <span id="userDataDetails" title="Подробнее" class="ico-details icon-button"></span>
+                <span id="editUserData" title="Редактировать" class="ico-edit icon-button"></span>
             </td>
         </tr>
     }
