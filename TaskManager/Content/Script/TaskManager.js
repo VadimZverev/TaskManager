@@ -138,12 +138,13 @@
 
             $.ajax({
                 type: "POST",
-                url: "/Account/DeleteUser/",
+                url: "/Account/DeleteUserAsync/",
                 data: { id: _id },
                 success: function (data) {
 
                     if (data.result === true) {
-                        el_tbody.find(el_tr).remove();
+                        //el_tbody.find(el_tr).remove();
+                        $('#listUser').click();
                     }
                     else {
                         alert("Данная запись не найдена.");

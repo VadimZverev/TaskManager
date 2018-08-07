@@ -34,6 +34,8 @@ namespace TaskManager.Controllers
                 if (user != null)
                 {
                     FormsAuthentication.SetAuthCookie(model.Name, true);
+                    //HttpContext.Response.Cookies["userDataId"].Value = Convert.ToString(user.UserDataId);
+
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -49,7 +51,41 @@ namespace TaskManager.Controllers
         public ActionResult Logoff()
         {
             FormsAuthentication.SignOut();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login");
+        }
+
+        // Открытие окна регистарции пользователя(Регистрация анонимного пользователя).
+        [AllowAnonymous]
+        public ActionResult Register()
+        {
+            return View();
+        }
+
+        // Сохранение регистрационных данных.
+        [HttpPost]
+        public async Task<ActionResult> Register(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = Mapper.Map<RegisterViewModel, User>(model);
+                UserData userData = new UserData
+                {
+                    Id = user.Id,
+                    FirstName = user.Login
+                };
+                user.RoleId = 1;
+
+                context.Users.Add(user);
+                context.UserDatas.Add(userData);
+
+                await context.SaveChangesAsync();
+
+                FormsAuthentication.SetAuthCookie(model.Login, true);
+
+                return RedirectToAction("ListProject", "Home");
+            }
+
+            return View(model);
         }
 
         // Открытие списка пользователей.
@@ -83,39 +119,6 @@ namespace TaskManager.Controllers
             ViewBag.userRole = new SelectList(role, "Id", "Name");
 
             return View();
-        }
-
-        // Открытие окна регистарции пользователя(Регистрация анонимного пользователя).
-
-        [AllowAnonymous]
-        public ActionResult Register()
-        {            
-            return View();
-        }
-
-        // Сохранение регистрационных данных.
-        [HttpPost]
-        public async Task<ActionResult> Register(CreateUserViewModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = Mapper.Map<CreateUserViewModel, User>(model);
-                UserData userData = new UserData
-                {
-                    Id = user.Id,
-                    FirstName = user.Login
-                };
-                user.RoleId = 1;
-
-                context.Users.Add(user);
-                context.UserDatas.Add(userData);
-
-                await context.SaveChangesAsync();
-
-                return RedirectToAction("ListUser");
-            }
-
-            return View(model);
         }
 
         // Открытие окна редактирования данных пользователя.
@@ -175,21 +178,26 @@ namespace TaskManager.Controllers
 
         // Удаление пользователя.
         [HttpPost]
-        public JsonResult DeleteUser(int id)
+        public async Task<JsonResult> DeleteUserAsync(int id)
         {
             try
             {
-                //var user = context.Users.Where(x => x.Id == id).FirstOrDefault();
-                var userData = context.UserDatas.Where(x => x.Id == id).FirstOrDefault();
+                var userData = await context.UserDatas.Where(x => x.Id == id).FirstOrDefaultAsync();
 
                 if (userData == null)
                 {
                     return Json(new { result = false });
                 }
 
-                //context.Users.Remove(user);
+                var user = await context.Users.Where(x => x.UserDataId == id).FirstOrDefaultAsync();
+
+                if (user.Login.Equals(User.Identity.Name))
+                {
+                    FormsAuthentication.SignOut();
+                }
+
                 context.UserDatas.Remove(userData);
-                context.SaveChanges();
+                await context.SaveChangesAsync();
 
                 return Json(new { result = true });
             }

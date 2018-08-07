@@ -7,7 +7,7 @@
 
         <ul class="nav navbar-nav navbar-right">
             <li>
-                @Html.ActionLink("Здравствуйте, " + User.Identity.GetUserName(), "UserDataDetails", "Account", routeValues:null, htmlAttributes: new { title="Manage" })
+                @Html.ActionLink("Здравствуйте, " + User.Identity.GetUserName(), "EditUserData", null, htmlAttributes: new { title = "Будущие настройки" })
             </li>
             <li><a href="javascript:document.getElementById('logoutForm').submit()">Выход</a></li>
         </ul>
