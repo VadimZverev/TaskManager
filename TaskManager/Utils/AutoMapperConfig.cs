@@ -54,7 +54,7 @@ namespace TaskManager.Utils
 
                 cfg.CreateMap<CreateUserViewModel, User>();
 
-                cfg.CreateMap<RegisterViewModel, User>();
+                //cfg.CreateMap<RegisterViewModel, User>();
 
                 //___________________________________________________TASK_MAP___________________________________________________//
 

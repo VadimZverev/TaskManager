@@ -12,6 +12,7 @@ using TaskManager.Models;
 
 namespace TaskManager.Controllers
 {
+    [AllowAnonymous]
     public class AccountController : Controller
     {
         private DataContext context = new DataContext();
@@ -34,13 +35,13 @@ namespace TaskManager.Controllers
                 if (user != null)
                 {
                     FormsAuthentication.SetAuthCookie(model.Name, true);
-                    //HttpContext.Response.Cookies["userDataId"].Value = Convert.ToString(user.UserDataId);
+                    HttpContext.Response.Cookies["userDataId"].Value = Convert.ToString(user.UserDataId);
 
                     return RedirectToAction("Index", "Home");
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Пользователя с таким логином и паролем нет");
+                    ModelState.AddModelError("", "Логин (и)или пароль неверны.");
                 }
             }
 
@@ -51,11 +52,11 @@ namespace TaskManager.Controllers
         public ActionResult Logoff()
         {
             FormsAuthentication.SignOut();
+            Response.Cookies["userDataId"].Value = null;
             return RedirectToAction("Login");
         }
 
         // Открытие окна регистарции пользователя(Регистрация анонимного пользователя).
-        [AllowAnonymous]
         public ActionResult Register()
         {
             return View();
@@ -63,32 +64,41 @@ namespace TaskManager.Controllers
 
         // Сохранение регистрационных данных.
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = Mapper.Map<RegisterViewModel, User>(model);
-                UserData userData = new UserData
+                if (context.Users.FirstOrDefault(u => u.Login == model.Login && u.Password == model.Password) == null)
                 {
-                    Id = user.Id,
-                    FirstName = user.Login
-                };
-                user.RoleId = 1;
+                    //var roleId = context.Roles.Where(m=> m.Name == "User").FirstOrDefault().Id;
+                    context.Users.Add(new User
+                    {
+                        Login = model.Login,
+                        Password = model.Password,
+                        RoleId = context.Roles.Where(m => m.Name == "User").FirstOrDefault().Id
+                    });
+                    context.UserDatas.Add(new UserData
+                    {
+                        FirstName = model.Login
+                    });
 
-                context.Users.Add(user);
-                context.UserDatas.Add(userData);
+                    await context.SaveChangesAsync();
+                    FormsAuthentication.SetAuthCookie(model.Login, true);
 
-                await context.SaveChangesAsync();
-
-                FormsAuthentication.SetAuthCookie(model.Login, true);
-
-                return RedirectToAction("ListProject", "Home");
+                    return RedirectToAction("ListProject", "Home");
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Пользователь с таким логином уже существует");
+                }
             }
 
             return View(model);
         }
 
         // Открытие списка пользователей.
+        [Authorize(Roles = "Administrator")]
         public ActionResult ListUser()
         {
             List<ListUserViewModel> listUser = new List<ListUserViewModel>();
@@ -112,7 +122,7 @@ namespace TaskManager.Controllers
         }
 
         // Создание пользователя (АдминМетод в будущем)
-        [HttpGet]
+        [Authorize(Roles = "Administrator")]
         public ActionResult CreateUser()
         {
             var role = context.Roles.ToList();
@@ -122,7 +132,8 @@ namespace TaskManager.Controllers
         }
 
         // Открытие окна редактирования данных пользователя.
-        [HttpGet]
+
+        [Authorize]
         public ActionResult EditUserData(int? id)
         {
             if (id == null)
@@ -145,6 +156,8 @@ namespace TaskManager.Controllers
 
         // Сохранение изменений данных пользователя.
         [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
         public JsonResult EditUserData(UserDataDetailsViewModel model)
         {
             try
@@ -177,6 +190,7 @@ namespace TaskManager.Controllers
         }
 
         // Удаление пользователя.
+        [Authorize]
         [HttpPost]
         public async Task<JsonResult> DeleteUserAsync(int id)
         {
