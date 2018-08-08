@@ -14,17 +14,16 @@ namespace TaskManager
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
-                name: "Account",
-                url: "{controller}/{action}",
-                defaults: new { controller = "Account", action = "ListUser" }
-                );
-
-            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
 
+            routes.MapRoute(
+                name: "Account",
+                url: "{controller}/{action}",
+                defaults: new { controller = "Account", action = "ListUser" }
+                );
         }
     }
 }

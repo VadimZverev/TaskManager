@@ -39,6 +39,7 @@ namespace TaskManager.Controllers
                 {
                     FormsAuthentication.SetAuthCookie(model.Name, true);
                     HttpContext.Response.Cookies["userDataId"].Value = Convert.ToString(user.UserDataId);
+                    Response.Cookies["userDataId"].Expires = DateTime.Now.AddMinutes(2880);
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -120,9 +121,9 @@ namespace TaskManager.Controllers
                 return HttpNotFound();
             }
 
-            List<UserDataDetailsViewModel> UserDetails = new List<UserDataDetailsViewModel>();
-            var userData = await context.UserDatas.FindAsync(id);
+            var userData = await context.UserDatas.FindAsync(id);            
             var model = Mapper.Map<UserData, UserDataDetailsViewModel>(userData);
+            
             return PartialView(model);
         }
 

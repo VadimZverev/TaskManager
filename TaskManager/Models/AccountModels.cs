@@ -6,6 +6,16 @@ using System.Web;
 
 namespace TaskManager.Models
 {
+    public class LoginViewModel
+    {
+        [Required(ErrorMessage = "Необходимо ввести логин")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessage = "Необходимо ввести пароль")]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+    }
+
     public class RegisterViewModel
     {
         [Required(ErrorMessage = "Необходимо ввести логин")]
@@ -24,4 +34,5 @@ namespace TaskManager.Models
         [Display(Name = "Подтверждение пароля")]
         public string PasswordConfirm { get; set; }
     }
+
 }
