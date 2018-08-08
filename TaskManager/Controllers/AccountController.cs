@@ -9,15 +9,17 @@ using System.Web.Mvc;
 using System.Web.Security;
 using TaskManager.DAL;
 using TaskManager.Models;
+using TaskManager.Providers;
 
 namespace TaskManager.Controllers
 {
-    [AllowAnonymous]
+    [Authorize]
     public class AccountController : Controller
     {
         private DataContext context = new DataContext();
 
         // Открытие окна входа пользователя в систему.
+        [AllowAnonymous]
         public ActionResult Login()
         {
             return View();
@@ -25,6 +27,7 @@ namespace TaskManager.Controllers
 
         // Вход пользователя в систему.
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginViewModel model)
         {
@@ -57,6 +60,7 @@ namespace TaskManager.Controllers
         }
 
         // Открытие окна регистарции пользователя(Регистрация анонимного пользователя).
+        [AllowAnonymous]
         public ActionResult Register()
         {
             return View();
@@ -64,6 +68,7 @@ namespace TaskManager.Controllers
 
         // Сохранение регистрационных данных.
         [HttpPost]
+        [AllowAnonymous]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
@@ -133,7 +138,7 @@ namespace TaskManager.Controllers
 
         // Открытие окна редактирования данных пользователя.
 
-        [Authorize]
+        //[Authorize]
         public ActionResult EditUserData(int? id)
         {
             if (id == null)
@@ -156,7 +161,7 @@ namespace TaskManager.Controllers
 
         // Сохранение изменений данных пользователя.
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         [ValidateAntiForgeryToken]
         public JsonResult EditUserData(UserDataDetailsViewModel model)
         {
@@ -190,7 +195,7 @@ namespace TaskManager.Controllers
         }
 
         // Удаление пользователя.
-        [Authorize]
+        //[Authorize]
         [HttpPost]
         public async Task<JsonResult> DeleteUserAsync(int id)
         {

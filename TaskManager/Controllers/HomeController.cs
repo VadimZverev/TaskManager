@@ -27,7 +27,7 @@ namespace TaskManager.Controllers
         }
 
         // Открытие списка проектов
-        [HttpGet]
+        [Authorize]
         public ActionResult ListProject()
         {
             List<ListProjectViewModel> listProjectViewModel = new List<ListProjectViewModel>();
