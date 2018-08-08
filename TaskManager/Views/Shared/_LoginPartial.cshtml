@@ -7,7 +7,7 @@
 
         <ul class="nav navbar-nav navbar-right">
             <li>
-                @Html.ActionLink("Здравствуйте, " + User.Identity.GetUserName(), "EditUserData", new { id = Request.Cookies["userDataId"].Value }, htmlAttributes: new { title = "Будущие настройки" })
+                @Html.ActionLink("Здравствуйте, " + User.Identity.GetUserName(), "EditUserData", "Account", new { id = Request.Cookies["userDataId"].Value }, htmlAttributes: new { title = "Будущие настройки" })
             </li>
             <li><a href="javascript:document.getElementById('logoutForm').submit()">Выход</a></li>
         </ul>

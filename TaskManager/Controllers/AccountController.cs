@@ -77,7 +77,6 @@ namespace TaskManager.Controllers
             {
                 if (context.Users.FirstOrDefault(u => u.Login == model.Login && u.Password == model.Password) == null)
                 {
-                    //var roleId = context.Roles.Where(m=> m.Name == "User").FirstOrDefault().Id;
                     context.Users.Add(new User
                     {
                         Login = model.Login,
@@ -121,9 +120,9 @@ namespace TaskManager.Controllers
                 return HttpNotFound();
             }
 
-            var userData = await context.UserDatas.FindAsync(id);            
+            var userData = await context.UserDatas.FindAsync(id);
             var model = Mapper.Map<UserData, UserDataDetailsViewModel>(userData);
-            
+
             return PartialView(model);
         }
 
@@ -134,12 +133,58 @@ namespace TaskManager.Controllers
             var role = context.Roles.ToList();
             ViewBag.userRole = new SelectList(role, "Id", "Name");
 
-            return View();
+            return PartialView();
+        }
+
+        // сохранение нового пользователя (АдминМетод в будущем)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrator")]
+        public JsonResult CreateUser(CreateUserViewModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (context.Users.FirstOrDefault(u => u.Login == model.Login && u.Password == model.Password) == null)
+                    {
+                        var userData = Mapper.Map<CreateUserViewModel, UserData>(model);
+
+                        context.Users.Add(new User
+                        {
+                            Login = model.Login,
+                            Password = model.Password,
+                            RoleId = model.RoleId
+                        });
+                        context.UserDatas.Add(userData);
+                        context.SaveChanges();
+
+                        return Json(new
+                        {
+                            id = userData.Id,
+                            fio = userData.LastName + " " +
+                            userData.FirstName + " " +
+                            userData.MiddleName,
+                            role = context.Roles.Find(model.RoleId).Name,
+                            result = true
+                        });
+                    }
+                    else
+                    {
+                        return Json(new { result = false, msg = "Пользователь с таким логином уже существует" });
+                    }
+                }
+
+                return Json(new { result = false });
+            }
+            catch (Exception exc)
+            {
+
+                return Json(new { exc.Message });
+            }
         }
 
         // Открытие окна редактирования данных пользователя.
-
-        //[Authorize]
         public ActionResult EditUserData(int? id)
         {
             if (id == null)
@@ -147,12 +192,21 @@ namespace TaskManager.Controllers
                 return RedirectToAction("ListUser");
             }
 
-            List<UserDataDetailsViewModel> UserDetails = new List<UserDataDetailsViewModel>();
+            var user = context.Users.Where(m => m.UserDataId == id).FirstOrDefault();
             var userData = context.UserDatas.Find(id);
+            
 
             if (userData != null)
             {
-                var model = Mapper.Map<UserData, UserDataDetailsViewModel>(userData);
+                var roles = context.Roles.ToList();
+                Session["userRole"] = new SelectList(roles, "Id", "Name", user.RoleId);
+
+                var model = Mapper.Map<UserData, CreateUserViewModel>(userData);
+                model.Login = user.Login;
+                model.Password = user.Password;
+                model.RoleId = (int)user.RoleId;
+                model.UserId = user.Id;
+
                 return PartialView(model);
             }
 
@@ -162,17 +216,19 @@ namespace TaskManager.Controllers
 
         // Сохранение изменений данных пользователя.
         [HttpPost]
-        //[Authorize]
         [ValidateAntiForgeryToken]
-        public JsonResult EditUserData(UserDataDetailsViewModel model)
+        public JsonResult EditUserData(CreateUserViewModel model)
         {
             try
             {
                 if (ModelState.IsValid)
                 {
-                    var userData = Mapper.Map<UserDataDetailsViewModel, UserData>(model);
+                    var userData = Mapper.Map<CreateUserViewModel, UserData>(model);
+                    var user = Mapper.Map<CreateUserViewModel, User>(model);
 
                     context.Entry(userData).State = EntityState.Modified;
+                    context.Entry(user).State = EntityState.Modified;
+
                     context.SaveChanges();
 
                     return Json(new
@@ -181,7 +237,7 @@ namespace TaskManager.Controllers
                         fio = userData.LastName + " " +
                         userData.FirstName + " " +
                         userData.MiddleName,
-                        role = context.Users.Find(model.Id).Role.Name,
+                        role = context.Roles.Find(model.RoleId).Name,
                         result = true
                     });
                 }
@@ -196,7 +252,6 @@ namespace TaskManager.Controllers
         }
 
         // Удаление пользователя.
-        //[Authorize]
         [HttpPost]
         public async Task<JsonResult> DeleteUserAsync(int id)
         {

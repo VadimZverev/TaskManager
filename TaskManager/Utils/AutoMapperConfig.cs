@@ -55,9 +55,14 @@ namespace TaskManager.Utils
                     //.ForMember(dest => dest.Country, opt => opt.MapFrom(f => f.Country ?? "Не указано"))
                     ;
 
-                cfg.CreateMap<CreateUserViewModel, User>();
+                cfg.CreateMap<UserData, CreateUserViewModel>()
+                ;
 
-                //cfg.CreateMap<RegisterViewModel, User>();
+                cfg.CreateMap<CreateUserViewModel, User>()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(f => f.UserId))
+                .ForMember(dest => dest.UserDataId, opt => opt.MapFrom(f => f.Id));
+
+                cfg.CreateMap<CreateUserViewModel, UserData>();
 
                 //___________________________________________________TASK_MAP___________________________________________________//
 

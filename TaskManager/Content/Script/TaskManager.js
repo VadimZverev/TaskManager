@@ -63,6 +63,69 @@
         });
     });
 
+    // Админ уровень. Создание нового пользователя
+    $(document).on('click', '#сreateUser', function (e) {
+        e.preventDefault();
+
+        $("#loading").show();
+
+        var url = "/Account/CreateUser/";
+
+        $('#myModalBodyDiv1').load(url, function () {
+
+            $("#loading").hide();
+            $('.modal-title').html('Новый пользователь');
+            $('#myModal1').modal('show');
+
+            var $form = $('#myForm');
+            $.validator.unobtrusive.parse($form);
+
+            $('.close').on('click', function () {
+                $('.modal').modal('hide');
+                $('.modal-title').empty();
+                $('#myModalBodyDiv1').empty();
+            });
+
+            $form.submit(function () {
+
+                if ($form.valid()) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/Account/CreateUser/",
+                        data: $(this).serialize(),
+                        success: function (data) {
+
+                            if (data.result === true) {
+                                $('.modal').modal('hide');
+                                $(document).find('tbody').append(
+                                    '<tr><td>' + data.fio +
+                                    '</td><td>' + data.role +
+                                    '</td>' +
+                                    '<td><span id="idUser" hidden = "hidden"  data-id=' + data.id + '></span >' +
+                                    '<span title="Подробнее" id="userDataDetails" class="ico-details icon-button">' +
+                                    '</span><span title="Редактировать" id="editUserData" class="ico-edit icon-button">' +
+                                    '</span><span title="Удалить пользователя" id="deleteUser" class="ico-delete icon-button">' +
+                                    '</span ></td >'
+                                );
+
+                                console.log(data);
+
+                                $('#myModalBodyDiv1').empty();
+                            }
+                            else if (data.result === false) {
+                                alert(data.msg);
+                            }
+                        },
+                        error: function (data) {
+                            alert(data.Message);
+                        }
+                    });
+                }
+                return false;
+            });
+        });
+    });
+
     // Редактирование данных пользователя.
     $(document).on('click', '#editUserData', function (e) {
         e.preventDefault();
@@ -77,7 +140,7 @@
         $('#myModalBodyDiv1').load(url, function () {
             $("#loading").hide();
             $('#myModal1').modal('show');
-            $('.modal-title').html('Редактирование информации пользователя');
+            $('.modal-title').html('Редактирование пользователя');
 
             var $form = $('#myForm');
             $.validator.unobtrusive.parse($form);

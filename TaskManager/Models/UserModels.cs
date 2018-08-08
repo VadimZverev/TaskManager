@@ -20,16 +20,7 @@ namespace TaskManager.Models
         [StringLength(50, ErrorMessage = "Длина пароля должна быть не менее {2} символов.", MinimumLength = 6)]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-
-        [Required(ErrorMessage = "Необходимо ввести пароль")]
-        [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "Пароль и подтверждение пароля не совпадают.")]
-        [DataType(DataType.Password)]
-        [Display(Name = "Подтверждение пароля")]
-        public string PasswordConfirm { get; set; }
-
-        [Display(Name = "Права доступа")]
-        public string UserRole { get; set; }
-
+        
         [Required(ErrorMessage = "Необходим ввод имени")]
         [Display(Name = "Имя")]
         public string FirstName { get; set; }
@@ -55,6 +46,13 @@ namespace TaskManager.Models
 
         [Display(Name = "Страна")]
         public string Country { get; set; }
+
+        [HiddenInput(DisplayValue = false)]
+        public int Id { get; set; }
+
+        [HiddenInput(DisplayValue = false)]
+        public int UserId { get; set; }
+        public virtual User User { get; set; }
 
         [Required(ErrorMessage = "Необходимо выбрать роль пользователю")]
         public int RoleId { get; set; }
