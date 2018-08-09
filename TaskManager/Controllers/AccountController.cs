@@ -38,8 +38,6 @@ namespace TaskManager.Controllers
                 if (user != null)
                 {
                     FormsAuthentication.SetAuthCookie(model.Name, true);
-                    HttpContext.Response.Cookies["userDataId"].Value = Convert.ToString(user.UserDataId);
-                    Response.Cookies["userDataId"].Expires = DateTime.Now.AddMinutes(2880);
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -56,7 +54,6 @@ namespace TaskManager.Controllers
         public ActionResult Logoff()
         {
             FormsAuthentication.SignOut();
-            Response.Cookies["userDataId"].Value = null;
             return RedirectToAction("Login");
         }
 

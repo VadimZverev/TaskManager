@@ -113,7 +113,8 @@
                                 $('#myModalBodyDiv1').empty();
                             }
                             else if (data.result === false) {
-                                alert(data.msg);
+                                $('.validation-summary-errors').removeAttr('hidden').find('li').html(data.msg);
+                                //alert(data.msg);
                             }
                         },
                         error: function (data) {

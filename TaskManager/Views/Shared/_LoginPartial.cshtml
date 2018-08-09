@@ -1,4 +1,5 @@
 ﻿@using Microsoft.AspNet.Identity
+@using TaskManager.DAL
 @if (Request.IsAuthenticated)
 {
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
@@ -7,7 +8,14 @@
 
         <ul class="nav navbar-nav navbar-right">
             <li>
-                @Html.ActionLink("Здравствуйте, " + User.Identity.GetUserName(), "EditUserData", "Account", new { id = Request.Cookies["userDataId"].Value }, htmlAttributes: new { title = "Будущие настройки" })
+                @{
+                    using (DataContext context = new DataContext())
+                    {
+                        var id = context.Users.AsParallel().Where(x => x.Login == User.Identity.Name).FirstOrDefault().UserDataId;
+
+                        @Html.ActionLink("Здравствуйте, " + User.Identity.GetUserName(), "EditUserData", "Account", new { id = id }, htmlAttributes: new { title = "Будущие настройки" })
+                    }
+                }
             </li>
             <li><a href="javascript:document.getElementById('logoutForm').submit()">Выход</a></li>
         </ul>
