@@ -178,6 +178,7 @@
     <Compile Include="DAL\TaskType.cs" />
     <Compile Include="DAL\User.cs" />
     <Compile Include="DAL\UserData.cs" />
+    <Compile Include="Filters\AuthorizeAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

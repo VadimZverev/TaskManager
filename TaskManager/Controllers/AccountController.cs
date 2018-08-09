@@ -10,10 +10,11 @@ using System.Web.Security;
 using TaskManager.DAL;
 using TaskManager.Models;
 using TaskManager.Providers;
+using TaskManager.Filters;
 
 namespace TaskManager.Controllers
 {
-    [Authorize]
+    [System.Web.Mvc.Authorize]
     public class AccountController : Controller
     {
         private DataContext context = new DataContext();
@@ -100,7 +101,7 @@ namespace TaskManager.Controllers
         }
 
         // Открытие списка пользователей.
-        [Authorize(Roles = "Administrator")]
+        [Filters.Authorize(Roles = "Administrator")]
         public ActionResult ListUser()
         {
             List<ListUserViewModel> listUser = new List<ListUserViewModel>();
@@ -124,7 +125,7 @@ namespace TaskManager.Controllers
         }
 
         // Создание пользователя (АдминМетод в будущем)
-        [Authorize(Roles = "Administrator")]
+        [Filters.Authorize(Roles = "Administrator")]
         public ActionResult CreateUser()
         {
             var role = context.Roles.ToList();
@@ -136,7 +137,7 @@ namespace TaskManager.Controllers
         // сохранение нового пользователя (АдминМетод в будущем)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrator")]
+        [Filters.Authorize(Roles = "Administrator")]
         public JsonResult CreateUser(CreateUserViewModel model)
         {
             try
