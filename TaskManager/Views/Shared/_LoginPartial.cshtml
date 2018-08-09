@@ -11,7 +11,7 @@
                 @{
                     using (DataContext context = new DataContext())
                     {
-                        var id = context.Users.AsParallel().Where(x => x.Login == User.Identity.Name).FirstOrDefault().UserDataId;
+                        var id = context.UserDatas.AsParallel().Where(x => x.LastName + " " + x.FirstName + " " + x.MiddleName == User.Identity.Name).FirstOrDefault().Id;
 
                         @Html.ActionLink("Здравствуйте, " + User.Identity.GetUserName(), "EditUserData", "Account", new { id = id }, htmlAttributes: new { title = "Будущие настройки" })
                     }

@@ -30,7 +30,7 @@ namespace TaskManager.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public ActionResult Login(LoginViewModel model)
+        public ActionResult Login(LoginViewModel model, string returnUrl)
         {
             if (ModelState.IsValid)
             {
@@ -38,8 +38,12 @@ namespace TaskManager.Controllers
 
                 if (user != null)
                 {
-                    FormsAuthentication.SetAuthCookie(model.Name, true);
-
+                    FormsAuthentication.SetAuthCookie(user.UserData.LastName + " " + user.UserData.FirstName + " " + user.UserData.MiddleName, true);
+                    FormsAuthentication.RedirectFromLoginPage(user.UserData.LastName + " " + user.UserData.FirstName + " " + user.UserData.MiddleName, true);
+                    if (Url.IsLocalUrl(returnUrl))
+                    {
+                        return Redirect(returnUrl);
+                    }
                     return RedirectToAction("Index", "Home");
                 }
                 else
@@ -192,7 +196,7 @@ namespace TaskManager.Controllers
 
             var user = context.Users.Where(m => m.UserDataId == id).FirstOrDefault();
             var userData = context.UserDatas.Find(id);
-            
+
 
             if (userData != null)
             {

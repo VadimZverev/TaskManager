@@ -15,7 +15,7 @@ namespace TaskManager.Filters
             {
                 filterContext.Result = new RedirectToRouteResult(
                     new System.Web.Routing.RouteValueDictionary {
-                        { "controller", "Home" }, { "action", "index" }
+                        { "controller", "Error" }, { "action", "Forbidden" }
                     });
             }
             else

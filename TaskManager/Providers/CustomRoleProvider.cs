@@ -43,7 +43,7 @@ namespace TaskManager.Providers
             using (DataContext context = new DataContext())
             {
                 // Получаем пользователя
-                User user = context.Users.Include(u => u.Role).FirstOrDefault(u => u.Login == username);
+                User user = context.Users.Include(u => u.Role).FirstOrDefault(u => u.UserData.LastName + " " + u.UserData.FirstName + " " + u.UserData.MiddleName == username);
                 if (user != null && user.Role != null)
                 {
                     // получаем роль
