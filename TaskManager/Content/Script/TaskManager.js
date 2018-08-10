@@ -28,7 +28,7 @@
         });
     });
 
-    /* ______________Работа с пользователями______________ */
+    /* _____Админ уровень. Работа с пользователями_____ */
 
     // Список пользователей.
     $(document).on('click', '#listUser', function (e) {
@@ -63,7 +63,7 @@
         });
     });
 
-    // Админ уровень. Создание нового пользователя
+    //Создание нового пользователя
     $(document).on('click', '#сreateUser', function (e) {
         e.preventDefault();
 
@@ -128,7 +128,7 @@
     });
 
     // Редактирование данных пользователя.
-    $(document).on('click', '#editUserData', function (e) {
+    $(document).on('click', '#editUser', function (e) {
         e.preventDefault();
 
         var container = this.closest('tr');
@@ -136,7 +136,7 @@
 
         $("#loading").show();
 
-        var url = "/Account/EditUserData/" + _id;
+        var url = "/Account/EditUser/" + _id;
 
         $('#myModalBodyDiv1').load(url, function () {
             $("#loading").hide();
@@ -157,7 +157,7 @@
                 if ($form.valid()) {
                     $.ajax({
                         type: "POST",
-                        url: "/Account/EditUserData/",
+                        url: "/Account/EditUser/",
                         data: $(this).serialize(),
                         success: function (data) {
 
@@ -169,7 +169,7 @@
                                     '</td>' +
                                     '<td><span id="idUser" hidden = "hidden"  data-id=' + data.id + '></span >' +
                                     '<span title="Подробнее" id="userDataDetails" class="ico-details icon-button">' +
-                                    '</span><span title="Редактировать" id="editUserData" class="ico-edit icon-button">' +
+                                    '</span><span title="Редактировать" id="editUser" class="ico-edit icon-button">' +
                                     '</span><span title="Удалить пользователя" id="deleteUser" class="ico-delete icon-button">' +
                                     '</span ></td >'
                                 );
@@ -221,6 +221,18 @@
         }
     });
 
+    /* ___________Уровень пользователя___________ */
+
+    // Открытие профиля.
+    $(document).on('click', '#editUserData', function () {
+
+        var _id = $(document).find('#editUserData').data('id');
+
+        $("#loading").show();
+
+        window.location.host;
+        window.location.href = '/Account/EditUserData/' + _id;
+    });
 
     /* ______________Работа с проектами______________ */
 
@@ -275,7 +287,7 @@
                                     '</td><td>' + data.DateCreate +
                                     '</td><td></td>' +
                                     '<td><span hidden = "hidden" id="idProject" data-id=' + data.ProjectId + '></span >' +
-                                    '<span title="Редактировать проект" id="getProjectEdit" class="ico-edit icon-button">' +
+                                    '<span title="Редактировать проект" id="projectEdit" class="ico-edit icon-button">' +
                                     '</span><span title="Список задач" id="projectTaskList" class="ico-tasklist icon-button"></span>' +
                                     '<span title="Удалить проект" id="projectDelete" class="ico-delete icon-button"></span></td >'
                                 );
@@ -340,7 +352,7 @@
                                     '</td><td>' + data.DateCreate +
                                     '</td><td>' + data.DateClose +
                                     '<td><span hidden = "hidden" id="idProject" data-id=' + data.ProjectId + '></span >' +
-                                    '<span title="Редактировать проект" id="getProjectEdit" class="ico-edit icon-button">' +
+                                    '<span title="Редактировать проект" id="projectEdit" class="ico-edit icon-button">' +
                                     '</span><span title="Список задач" id="projectTaskList" class="ico-tasklist icon-button"></span>' +
                                     '<span title="Удалить проект" id="projectDelete" class="ico-delete icon-button"></span></td >'
                                 );
@@ -377,6 +389,8 @@
 
                     if (data.result === true) {
                         $(container).remove();
+                        $('#taskRes').empty();
+
                     }
                     else {
                         alert("Данная запись не найдена.");
@@ -577,4 +591,16 @@
         }
     });
 
+});
+
+/* ______________Профиль______________ */
+
+// Маска мобильного.
+$(function () {
+    $("#Phone").mask("8 (999) 999-99-99");
+});
+
+// Маска Дня Рождения.
+$(function () {
+    $("#Birthday").mask("99.99.9999 г.");
 });

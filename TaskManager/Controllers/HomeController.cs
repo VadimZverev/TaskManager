@@ -55,6 +55,7 @@ namespace TaskManager.Controllers
 
         // Сохранение созданного проекта.
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult CreateProject(CreateProjectViewModel model)
         {
             try
@@ -127,6 +128,7 @@ namespace TaskManager.Controllers
 
         // Сохранение изменений проекта.
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult ProjectEdit(EditProjectViewModel model)
         {
             try
@@ -252,6 +254,7 @@ namespace TaskManager.Controllers
 
         // сохранение созданной задачи.
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<JsonResult> CreateTask(CreateTaskViewModel model)
         {
             try
@@ -281,7 +284,7 @@ namespace TaskManager.Controllers
                                         user.FirstName + " " +
                                         user.MiddleName,
                         taskStatus = status.Name,
-                        DateCreate = model.DateCreate.ToShortDateString(),
+                        DateCreate = task.DateCreate.ToShortDateString(),
                         result = true
                     });
                 }
@@ -344,6 +347,7 @@ namespace TaskManager.Controllers
 
         // Сохранение изменений задачи.
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<JsonResult> TaskEdit(EditTaskViewModel model)
         {
             try

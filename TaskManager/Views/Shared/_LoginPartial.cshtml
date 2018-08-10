@@ -7,18 +7,35 @@
         @Html.AntiForgeryToken()
 
         <ul class="nav navbar-nav navbar-right">
-            <li>
-                @{
-                    using (DataContext context = new DataContext())
-                    {
-                        var id = context.UserDatas.AsParallel().Where(x => x.LastName + " " + x.FirstName + " " + x.MiddleName == User.Identity.Name).FirstOrDefault().Id;
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Здравствуйте,@User.Identity.GetUserName()</a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <div>
+                        @{
+                            using (DataContext context = new DataContext())
+                            {
+                                var id = context.UserDatas.AsParallel().Where(x => x.LastName + " " + x.FirstName + " " + x.MiddleName == User.Identity.Name).FirstOrDefault().Id;
+                                <a id="editUserData" href="#" class="dropdown-item" data-id="@id">Профиль</a>
+                                @*@Html.ActionLink("Профиль", "EditUserData", "Account", new { id = id }, htmlAttributes: new { @class = "dropdown-item", id = "editUserData" })*@
+                            }
+                        }
+                    </div>
 
-                        @Html.ActionLink("Здравствуйте, " + User.Identity.GetUserName(), "EditUserData", "Account", new { id = id }, htmlAttributes: new { title = "Будущие настройки" })
+                    @if (Context.User.IsInRole("Administrator"))
+                    {
+                        <div>
+                            <a id="listUser" href="#" class="dropdown-item">Пользователи</a>
+                        </div>
                     }
-                }
+
+                    <div>
+                        <a href="javascript:document.getElementById('logoutForm').submit()">Выход</a>
+                    </div>
+                </div>
             </li>
-            <li><a href="javascript:document.getElementById('logoutForm').submit()">Выход</a></li>
         </ul>
+
     }
 }
 else

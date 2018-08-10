@@ -32,6 +32,7 @@ namespace TaskManager.Models
         public string MiddleName { get; set; }
 
         [Display(Name = "Адрес")]
+        [DataType(DataType.MultilineText)]
         public string Address { get; set; }
 
         [Display(Name = "День рождения")]
@@ -79,7 +80,6 @@ namespace TaskManager.Models
         [HiddenInput(DisplayValue = false)]
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "Необходим ввод имени")]
         [Display(Name = "Имя")]
         public string FirstName { get; set; }
 
@@ -96,6 +96,7 @@ namespace TaskManager.Models
         public string Birthday { get; set; }
 
         [Display(Name = "Мобильный")]
+        [DataType(DataType.PhoneNumber)]
         public string Phone { get; set; }
 
         [Display(Name = "Город")]
@@ -105,4 +106,40 @@ namespace TaskManager.Models
         public string Country { get; set; }
 
     }
+
+    public class EditUserDataViewModel
+    {
+
+        [HiddenInput(DisplayValue = false)]
+        public int Id { get; set; }
+
+        [Required(ErrorMessage = "Необходим ввод имени")]
+        [Display(Name = "Имя*")]
+        public string FirstName { get; set; }
+
+        [Display(Name = "Фамилия")]
+        public string LastName { get; set; }
+
+        [Display(Name = "Отчество")]
+        public string MiddleName { get; set; }
+
+        [Display(Name = "Адрес")]
+        [DataType(DataType.MultilineText)]
+        public string Address { get; set; }
+
+        [Display(Name = "День рождения")]
+        public string Birthday { get; set; }
+
+        [Display(Name = "Мобильный")]
+        [DataType(DataType.PhoneNumber)]
+        public string Phone { get; set; }
+
+        [Display(Name = "Город")]
+        public string City { get; set; }
+
+        [Display(Name = "Страна")]
+        public string Country { get; set; }
+
+    }
+
 }

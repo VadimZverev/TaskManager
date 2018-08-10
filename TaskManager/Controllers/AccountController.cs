@@ -4,17 +4,14 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 using TaskManager.DAL;
 using TaskManager.Models;
-using TaskManager.Providers;
-using TaskManager.Filters;
 
 namespace TaskManager.Controllers
 {
-    [System.Web.Mvc.Authorize]
+    [Authorize]
     public class AccountController : Controller
     {
         private DataContext context = new DataContext();
@@ -128,6 +125,37 @@ namespace TaskManager.Controllers
             return PartialView(model);
         }
 
+        // Редактирование профиля.
+        public async Task<ActionResult> EditUserData(int? id)
+        {
+            if (id == null)
+            {
+                return HttpNotFound("404");
+            }
+
+            var userData = await context.UserDatas.FindAsync(id);
+            var model = Mapper.Map<UserData, EditUserDataViewModel>(userData);
+
+            return View(model);
+        }
+
+        // Сохранение изменений профиля.
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditUserData(EditUserDataViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var userData = Mapper.Map<EditUserDataViewModel, UserData>(model);
+                context.Entry(userData).State = EntityState.Modified;
+                context.SaveChanges();
+
+                return RedirectToAction("Index", "Home");
+            }
+
+            return View(model);
+        }
+
         // Создание пользователя (АдминМетод в будущем)
         [Filters.Authorize(Roles = "Administrator")]
         public ActionResult CreateUser()
@@ -138,7 +166,7 @@ namespace TaskManager.Controllers
             return PartialView();
         }
 
-        // сохранение нового пользователя (АдминМетод в будущем)
+        // сохранение нового пользователя (Админ уровень.)
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Filters.Authorize(Roles = "Administrator")]
@@ -187,16 +215,15 @@ namespace TaskManager.Controllers
         }
 
         // Открытие окна редактирования данных пользователя.
-        public ActionResult EditUserData(int? id)
+        public ActionResult EditUser(int? id)
         {
             if (id == null)
             {
-                return RedirectToAction("ListUser");
+                return HttpNotFound("404");
             }
 
             var user = context.Users.Where(m => m.UserDataId == id).FirstOrDefault();
             var userData = context.UserDatas.Find(id);
-
 
             if (userData != null)
             {
@@ -219,7 +246,7 @@ namespace TaskManager.Controllers
         // Сохранение изменений данных пользователя.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public JsonResult EditUserData(CreateUserViewModel model)
+        public JsonResult EditUser(CreateUserViewModel model)
         {
             try
             {

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace TaskManager.Filters
@@ -13,10 +10,7 @@ namespace TaskManager.Filters
         {
             if (filterContext.HttpContext.Request.IsAuthenticated)
             {
-                filterContext.Result = new RedirectToRouteResult(
-                    new System.Web.Routing.RouteValueDictionary {
-                        { "controller", "Error" }, { "action", "Forbidden" }
-                    });
+                filterContext.Result = new HttpStatusCodeResult(403);
             }
             else
             {

@@ -19,12 +19,9 @@
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
     <IISExpressSSLPort>44384</IISExpressSSLPort>
-    <IISExpressAnonymousAuthentication>
-    </IISExpressAnonymousAuthentication>
-    <IISExpressWindowsAuthentication>
-    </IISExpressWindowsAuthentication>
-    <IISExpressUseClassicPipelineMode>
-    </IISExpressUseClassicPipelineMode>
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -210,6 +207,8 @@
     <Content Include="Content\img\loading.gif" />
     <Content Include="Content\img\tasklistCreate_item.png" />
     <Content Include="Content\img\tasklist_item.png" />
+    <Content Include="Content\Script\jquery.maskedinput.js" />
+    <Content Include="Content\Script\jquery.maskedinput.min.js" />
     <Content Include="Content\Script\TaskManager.js" />
     <Content Include="Content\themes\base\accordion.css" />
     <Content Include="Content\themes\base\all.css" />
@@ -295,7 +294,7 @@
     <Content Include="Views\Account\ListUser.cshtml" />
     <Content Include="Views\Account\UserDataDetails.cshtml" />
     <Content Include="Views\Account\CreateUser.cshtml" />
-    <Content Include="Views\Account\EditUserData.cshtml" />
+    <Content Include="Views\Account\EditUser.cshtml" />
     <Content Include="Views\Home\ListTask.cshtml" />
     <Content Include="Views\Home\TaskEdit.cshtml" />
     <Content Include="Views\Home\CreateTask.cshtml" />
@@ -305,6 +304,7 @@
     <Content Include="Views\Account\Register.cshtml" />
     <Content Include="Views\Error\Forbidden.cshtml" />
     <Content Include="Views\Error\NotFound.cshtml" />
+    <Content Include="Views\Account\EditUserData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
