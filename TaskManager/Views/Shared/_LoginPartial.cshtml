@@ -17,7 +17,6 @@
                             {
                                 var id = context.UserDatas.AsParallel().Where(x => x.LastName + " " + x.FirstName + " " + x.MiddleName == User.Identity.Name).FirstOrDefault().Id;
                                 <a id="editUserData" href="#" class="dropdown-item" data-id="@id">Профиль</a>
-                                @*@Html.ActionLink("Профиль", "EditUserData", "Account", new { id = id }, htmlAttributes: new { @class = "dropdown-item", id = "editUserData" })*@
                             }
                         }
                     </div>

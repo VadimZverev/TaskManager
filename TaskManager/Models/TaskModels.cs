@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using TaskManager.DAL;
 
@@ -139,4 +136,33 @@ namespace TaskManager.Models
         public virtual User User { get; set; }
 
     }
+
+    public class UserTasksViewModel
+    {
+        [HiddenInput(DisplayValue = false)]
+        public int ProjectId { get; set; }
+
+        [HiddenInput(DisplayValue = false)]
+        public int TaskId { get; set; }
+
+        [Display(Name = "Задача")]
+        public string TaskName { get; set; }
+
+        [Display(Name = "Имя проекта")]
+        public string ProjectName { get; set; }
+
+        [Display(Name = "Тип")]
+        public string Type { get; set; }
+
+        [Display(Name = "Описание")]
+        public string Description { get; set; }
+
+        [Display(Name = "Приоритет")]
+        public string Priority { get; set; }
+
+        [Display(Name = "Статус")]
+        public string Status { get; set; }
+
+    }
+
 }

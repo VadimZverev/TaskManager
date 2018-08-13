@@ -35,7 +35,9 @@ namespace TaskManager.Controllers
 
                 if (user != null)
                 {
-                    FormsAuthentication.SetAuthCookie(user.UserData.LastName + " " + user.UserData.FirstName + " " + user.UserData.MiddleName, true);
+                    FormsAuthentication.SetAuthCookie(user.UserData.LastName + " "
+                                                + user.UserData.FirstName + " "
+                                                + user.UserData.MiddleName, true);
                     FormsAuthentication.RedirectFromLoginPage(user.UserData.LastName + " " + user.UserData.FirstName + " " + user.UserData.MiddleName, true);
                     if (Url.IsLocalUrl(returnUrl))
                     {
@@ -149,6 +151,14 @@ namespace TaskManager.Controllers
                 var userData = Mapper.Map<EditUserDataViewModel, UserData>(model);
                 context.Entry(userData).State = EntityState.Modified;
                 context.SaveChanges();
+
+                if (!(User.Identity.Name == model.LastName + " "
+                                        + model.FirstName + " " + model.MiddleName))
+                {
+                    FormsAuthentication.SetAuthCookie(model.LastName + " "
+                                                 + model.FirstName + " "
+                                                 + model.MiddleName, true);
+                }
 
                 return RedirectToAction("Index", "Home");
             }

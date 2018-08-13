@@ -14,6 +14,16 @@ namespace TaskManager.Utils
         {
             Mapper.Initialize(cfg =>
             {
+                cfg.CreateMap<Tuple<Task, Project>, UserTasksViewModel>()
+                    .ForMember(dest => dest.TaskId, opt => opt.MapFrom(f => f.Item1.Id))
+                    .ForMember(dest => dest.ProjectId, opt => opt.MapFrom(f => f.Item2.Id))
+                    .ForMember(dest => dest.TaskName, opt => opt.MapFrom(f => f.Item1.TaskName))
+                    .ForMember(dest => dest.ProjectName, opt => opt.MapFrom(f => f.Item2.Name))
+                    .ForMember(dest => dest.Type, opt => opt.MapFrom(f => f.Item1.TaskType.Name))
+                    .ForMember(dest => dest.Description, opt => opt.MapFrom(f => f.Item1.Description))
+                    .ForMember(dest => dest.Priority, opt => opt.MapFrom(f => f.Item1.TaskPriority.Name))
+                    .ForMember(dest => dest.Status, opt => opt.MapFrom(f => f.Item1.TaskStatus.Name));
+
                 //___________________________________________________PROJECT_MAP___________________________________________________//
 
                 cfg.CreateMap<CreateProjectViewModel, Project>()
@@ -60,7 +70,7 @@ namespace TaskManager.Utils
 
                 cfg.CreateMap<EditUserDataViewModel, UserData>()
                     .ForMember(dest => dest.Birthday, opt => opt.MapFrom(f => f.Birthday ?? null))
-                    .ForMember(dest => dest.Phone, opt => opt.MapFrom(f => f.Phone.Replace(" ","").Replace("(","").Replace(")","").Replace("-","") ?? null));
+                    .ForMember(dest => dest.Phone, opt => opt.MapFrom(f => f.Phone.Replace(" ", "").Replace("(", "").Replace(")", "").Replace("-", "") ?? null));
 
                 //___________________________________________________TASK_MAP___________________________________________________//
 

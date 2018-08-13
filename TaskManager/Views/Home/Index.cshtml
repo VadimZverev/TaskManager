@@ -1,12 +1,75 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿@model IEnumerable<TaskManager.DAL.Task>
+@{
+    ViewBag.Title = "Системная панель";
 }
 
-<form class="navbar-form navbar-left">
-    <div class="form-group">
-        <input id="name" class="form-control" type="text" name="name" placeholder="поиск" />
-    </div>
-    <button id="search" type="submit" class="btn btn-default">
-        <span class="glyphicon glyphicon-search"></span>
-    </button>
-</form>
+@*<form class="navbar-form navbar-left">
+        <div class="form-group">
+            <input id="name" class="form-control" type="text" name="name" placeholder="поиск" />
+        </div>
+        <button id="search" type="submit" class="btn btn-default">
+            <span class="glyphicon glyphicon-search"></span>
+        </button>
+    </form>*@
+@*<p>
+        <span title="Новая задача" id="createTask" class="ico-tasklistCreate icon-button" data-id="@ViewBag.ProjectId"></span>
+    </p>*@
+
+<h2>Системная панель</h2>
+
+<table class="table table-hover">
+    <caption class="text-center">
+        <h3>Мои задачи</h3>
+    </caption>
+
+    @foreach (var item in Model)
+    {
+
+        <tr>
+            <th rowspan="2">
+                @Html.DisplayFor(modelItem => item.Project.Name)
+            </th>
+            <th>
+                @Html.DisplayName("Задача")
+            </th>
+            <th>
+                @Html.DisplayName("Тип")
+            </th>
+            <th>
+                @Html.DisplayName("Описание")
+            </th>
+            <th>
+                @Html.DisplayName("Приоритет")
+            </th>
+            <th>
+                @Html.DisplayName("Статус")
+            </th>
+            <th>
+                Действия
+            </th>
+        </tr>
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.TaskName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TaskType.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TaskPriority.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TaskStatus.Name)
+            </td>
+            <td>
+                <span hidden="hidden" id="idTask" data-id=@item.Id></span>
+                <span title="Редактировать задачу" id="TaskEdit" class="ico-edit icon-button"></span>
+                <span title="Удалить задачу" id="TaskDelete" class="ico-delete icon-button"></span>
+            </td>
+        </tr>
+    }
+
+</table>
