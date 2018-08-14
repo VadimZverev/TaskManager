@@ -42,7 +42,7 @@ namespace TaskManager.Models
 
     public class EditProjectViewModel
     {
-        [Required(ErrorMessage = "введите имя проекта")]
+        [Required(ErrorMessage = "Необходимо ввести имя проекта")]
         [StringLength(50)]
         [Display(Name = "Имя проекта")]
         public string Name { get; set; }

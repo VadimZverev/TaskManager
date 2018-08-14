@@ -301,7 +301,7 @@
                             }
                         },
                         error: function (data) {
-                            alert(data.Message);
+                            alert(data.msg);
                         }
                     });
                 }
@@ -364,7 +364,8 @@
                             }
                         },
                         error: function (data) {
-                            alert(data.Message);
+                            alert(data);
+                            console.log(data);
                         }
                     });
                 }
@@ -397,7 +398,7 @@
                     }
                 },
                 error: function (data) {
-                    alert('Нет ответа от сервера.');
+                    alert(data.msg);
                 }
             });
         }
@@ -420,6 +421,10 @@
             success: function (data) {
                 $('#taskRes').html(data);
                 $("#loading").hide();
+            },
+            error: function (data) {
+                alert(data);
+                console.log(data);
             }
         });
     });
