@@ -118,11 +118,11 @@ namespace TaskManager.Models
         [HiddenInput(DisplayValue = false)]
         public int TaskId { get; set; }
 
-        [Display(Name = "Задача")]
-        public string TaskName { get; set; }
-
         [Display(Name = "Имя проекта")]
         public string ProjectName { get; set; }
+
+        [Display(Name = "Задача")]
+        public string TaskName { get; set; }
 
         [Display(Name = "Тип")]
         public string Type { get; set; }

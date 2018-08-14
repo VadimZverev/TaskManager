@@ -14,15 +14,15 @@ namespace TaskManager.Utils
         {
             Mapper.Initialize(cfg =>
             {
-                cfg.CreateMap<Tuple<Task, Project>, UserTasksViewModel>()
-                    .ForMember(dest => dest.TaskId, opt => opt.MapFrom(f => f.Item1.Id))
-                    .ForMember(dest => dest.ProjectId, opt => opt.MapFrom(f => f.Item2.Id))
-                    .ForMember(dest => dest.TaskName, opt => opt.MapFrom(f => f.Item1.TaskName))
-                    .ForMember(dest => dest.ProjectName, opt => opt.MapFrom(f => f.Item2.Name))
-                    .ForMember(dest => dest.Type, opt => opt.MapFrom(f => f.Item1.TaskType.Name))
-                    .ForMember(dest => dest.Description, opt => opt.MapFrom(f => f.Item1.Description))
-                    .ForMember(dest => dest.Priority, opt => opt.MapFrom(f => f.Item1.TaskPriority.Name))
-                    .ForMember(dest => dest.Status, opt => opt.MapFrom(f => f.Item1.TaskStatus.Name));
+                cfg.CreateMap<Task, UserTasksViewModel>()
+                    .ForMember(dest => dest.TaskId, opt => opt.MapFrom(f => f.Id))
+                    .ForMember(dest => dest.ProjectId, opt => opt.MapFrom(f => f.ProjectId))
+                    .ForMember(dest => dest.TaskName, opt => opt.MapFrom(f => f.TaskName))
+                    .ForMember(dest => dest.ProjectName, opt => opt.MapFrom(f => f.Project.Name))
+                    .ForMember(dest => dest.Type, opt => opt.MapFrom(f => f.TaskType.Name))
+                    .ForMember(dest => dest.Description, opt => opt.MapFrom(f => f.Description))
+                    .ForMember(dest => dest.Priority, opt => opt.MapFrom(f => f.TaskPriority.Name))
+                    .ForMember(dest => dest.Status, opt => opt.MapFrom(f => f.TaskStatus.Name));
 
                 //___________________________________________________PROJECT_MAP___________________________________________________//
 

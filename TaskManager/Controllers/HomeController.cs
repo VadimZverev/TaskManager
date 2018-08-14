@@ -448,19 +448,23 @@ namespace TaskManager.Controllers
             }
         }
 
-        //public ActionResult Index()
-        //{
-        //    //var allTasks = context.Tasks.Where(m => m.User.UserData.FirstName.Contains(User.Identity.Name)).ToList();
-        //    var user = context.Users.Where(x => x.UserData.LastName + " " + x.UserData.FirstName + " "
-        //                                        + x.UserData.MiddleName == User.Identity.Name)
-        //                                        .FirstOrDefault();
+        public ActionResult Index()
+        {
+            User user;
+            List<DAL.Task> allTasks;
+            IEnumerable<UserTasksViewModel> model;
+            using (DataContext context = new DataContext())
+            {
+                user = context.Users.Where(x => x.UserData.LastName + " " + x.UserData.FirstName + " "
+                                                    + x.UserData.MiddleName == User.Identity.Name)
+                                                    .FirstOrDefault();
 
-        //    var allTasks = context.Tasks.AsParallel().Where(x => x.UserId == user.Id).ToList();
+                allTasks = context.Tasks.AsParallel().Where(x => x.UserId == user.Id).ToList();
 
-        //    List<DAL.Task> tasks = new List<DAL.Task>(allTasks);
+                model = Mapper.Map(allTasks, new List<UserTasksViewModel>());
+            }
 
-        //    return View(tasks);
-
-        //}
+            return View(model);
+        }
     }
 }

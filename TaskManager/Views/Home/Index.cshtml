@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TaskManager.DAL.Task>
+﻿@model IEnumerable<TaskManager.Models.UserTasksViewModel>
 @{
     ViewBag.Title = "Системная панель";
 }
@@ -27,22 +27,22 @@
 
         <tr>
             <th rowspan="2">
-                @Html.DisplayFor(modelItem => item.Project.Name)
+                @Html.DisplayFor(modelItem => item.ProjectName)
             </th>
             <th>
-                @Html.DisplayName("Задача")
+                @Html.DisplayNameFor(model => model.TaskName)
             </th>
             <th>
-                @Html.DisplayName("Тип")
+                @Html.DisplayNameFor(model => model.Type)
             </th>
             <th>
-                @Html.DisplayName("Описание")
+                @Html.DisplayNameFor(model => model.Description)
             </th>
             <th>
-                @Html.DisplayName("Приоритет")
+                @Html.DisplayNameFor(model => model.Priority)
             </th>
             <th>
-                @Html.DisplayName("Статус")
+                @Html.DisplayNameFor(model => model.Status)
             </th>
             <th>
                 Действия
@@ -53,19 +53,19 @@
                 @Html.DisplayFor(modelItem => item.TaskName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TaskType.Name)
+                @Html.DisplayFor(modelItem => item.Type)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TaskPriority.Name)
+                @Html.DisplayFor(modelItem => item.Priority)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TaskStatus.Name)
+                @Html.DisplayFor(modelItem => item.Status)
             </td>
             <td>
-                <span hidden="hidden" id="idTask" data-id=@item.Id></span>
+                <span hidden="hidden" id="idTask" data-id=@item.TaskId></span>
                 <span title="Редактировать задачу" id="TaskEdit" class="ico-edit icon-button"></span>
                 <span title="Удалить задачу" id="TaskDelete" class="ico-delete icon-button"></span>
             </td>
