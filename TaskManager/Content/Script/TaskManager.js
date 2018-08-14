@@ -473,9 +473,8 @@
                                     '</td><td>' + data.taskUser +
                                     '</td><td>' + data.taskStatus +
                                     '</td><td>' + data.DateCreate +
-                                    '</td><td>' +
-                                    '</td><td></td>' +
-                                    '<td><span hidden = "hidden" id="idTask" data-id=' + data.taskId + '></span >' +
+                                    '</td><td></td><td>' +
+                                    '<span hidden = "hidden" id="idTask" data-id=' + data.taskId + '></span >' +
                                     '<span title="Редактировать задачу" id="TaskEdit" class="ico-edit icon-button">' +
                                     '</span><span title="Удалить задачу" id="TaskDelete" class="ico-delete icon-button"></span></td >'
                                 );
@@ -489,7 +488,7 @@
                             }
                         },
                         error: function (data) {
-                            alert(data.Message);
+                            console.log(data);
                         }
                     });
                 }
@@ -543,7 +542,7 @@
                                     '</td><td>' + data.taskStatus +
                                     '</td><td>' + data.DateCreate +
                                     '</td><td>' + data.DateClose +
-                                    '</td><td></td>' +
+                                    '</td>' +
                                     '<td><span hidden = "hidden" id="idTask" data-id=' + data.taskId + '></span >' +
                                     '<span title="Редактировать задачу" id="TaskEdit" class="ico-edit icon-button">' +
                                     '</span><span title="Удалить задачу" id="TaskDelete" class="ico-delete icon-button"></span></td >'
@@ -556,7 +555,8 @@
                             }
                         },
                         error: function (data) {
-                            alert(data.Message);
+                            alert(data);
+                            console.log(data);
                         }
                     });
                 }
@@ -577,8 +577,6 @@
             $.ajax({
                 type: "POST",
                 url: "/Home/TaskDelete/",
-                // передача в качестве объекта
-                // поля будут закодированые через encodeURIComponent автоматически
                 data: { id: _id },
                 success: function (data) {
 
@@ -591,6 +589,7 @@
                 },
                 error: function (data) {
                     alert('Нет ответа от сервера.');
+                    console.log(data);
                 }
             });
         }

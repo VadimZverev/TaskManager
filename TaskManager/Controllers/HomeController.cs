@@ -13,8 +13,6 @@ namespace TaskManager.Controllers
 {
     public class HomeController : Controller
     {
-        //private DataContext context = new DataContext();
-
         // Тестовый метод поиска проектов через поисковик.
         //[HttpPost]
         //public ActionResult ProjectSearch(string name)
@@ -256,9 +254,6 @@ namespace TaskManager.Controllers
                 return RedirectToAction("ListProject");
             }
 
-            List<SelectListItem> taskUser = new List<SelectListItem>();
-            //List<SelectListItem> items;
-
             using (DataContext context = new DataContext())
             {
                 ViewBag.ProjectId = id;
@@ -270,27 +265,15 @@ namespace TaskManager.Controllers
                 ViewBag.TaskPriorities = new SelectList(priorities, "Id", "Name");
 
 
-                var users = context.Users.Select(p => new SelectListItem
+                var users = await context.Users.Select(p => new SelectListItem
                 {
-                    Value = p.Id.ToString(),
+                    Value = p.UserDataId.ToString(),
                     Text = p.UserData.LastName + " "
                         + p.UserData.FirstName + " "
                         + p.UserData.MiddleName
-                }).ToList();
+                }).ToListAsync();
 
-                taskUser.AddRange(users);
-
-                ViewBag.TaskUser = taskUser;
-
-                //var users = await context.Users.ToListAsync();
-                //ViewBag.TaskUser = new SelectList((from s in users
-                //                                   select new
-                //                                   {
-                //                                       s.Id,
-                //                                       Name = s.UserData.LastName + " "
-                //                                       + s.UserData.FirstName + " "
-                //                                       + s.UserData.MiddleName
-                //                                   }), "Id", "Name");
+                ViewBag.TaskUser = new List<SelectListItem>(users);
 
                 var statuses = await context.TaskStatuses.ToListAsync();
                 ViewBag.TaskStatuses = new SelectList(statuses, "Id", "Name");
@@ -299,177 +282,171 @@ namespace TaskManager.Controllers
         }
 
         // сохранение созданной задачи.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<JsonResult> CreateTask(CreateTaskViewModel model)
-        //{
-        //    try
-        //    {
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public JsonResult CreateTask(CreateTaskViewModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    using (DataContext context = new DataContext())
+                    {
+                        var task = Mapper.Map<CreateTaskViewModel, DAL.Task>(model);
+                        var user = context.UserDatas.Find(model.UserId);
 
-        //        if (ModelState.IsValid)
-        //        {
-        //            var task = Mapper.Map<CreateTaskViewModel, DAL.Task>(model);
-        //            var type = await context.TaskTypes.FindAsync(model.TaskTypeId);
-        //            var priority = await context.TaskPriorities.FindAsync(model.TaskPriorityId);
-        //            var user = await context.UserDatas.FindAsync(model.UserId);
-        //            var status = await context.TaskStatuses.FindAsync(model.TaskStatusId);
+                        context.Tasks.Add(task);
+                        context.SaveChanges();
 
-        //            context.Tasks.Add(task);
-        //            await context.SaveChangesAsync();
+                        return Json(new
+                        {
+                            taskId = task.Id,
+                            taskName = model.TaskName,
+                            taskType = context.TaskTypes.AsParallel().Where(x => x.Id == model.TaskTypeId).FirstOrDefault().Name,
+                            description = model.Description,
+                            taskPriority = context.TaskPriorities.AsParallel().Where(x => x.Id == model.TaskPriorityId).FirstOrDefault().Name,
+                            taskUser = $"{user.LastName} {user.FirstName} {user.MiddleName}",
+                            taskStatus = context.TaskStatuses.AsParallel().Where(x => x.Id == model.TaskStatusId).FirstOrDefault().Name,
+                            DateCreate = task.DateCreate.ToShortDateString(),
+                            result = true
+                        });
+                    }
+                }
 
-        //            Session.Clear();
+                return Json(new { result = false });
+            }
+            catch (Exception exc)
+            {
+                return Json(new { exc.Message });
+            }
 
-        //            return Json(new
-        //            {
-        //                taskId = task.Id,
-        //                taskName = model.TaskName,
-        //                taskType = type.Name,
-        //                description = model.Description,
-        //                taskPriority = priority.Name,
-        //                taskUser = user.LastName + " " +
-        //                                user.FirstName + " " +
-        //                                user.MiddleName,
-        //                taskStatus = status.Name,
-        //                DateCreate = task.DateCreate.ToShortDateString(),
-        //                result = true
-        //            });
-        //        }
-
-        //        return Json(new { result = false });
-        //    }
-        //    catch (Exception exc)
-        //    {
-        //        return Json(new
-        //        {
-        //            exc.Message
-        //        });
-        //    }
-
-        //}
+        }
 
         // Открытие окна редактирование задачи.
-        //[HttpGet]
-        //public async Task<ActionResult> TaskEdit(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return RedirectToAction("ListProject");
-        //    }
+        [HttpGet]
+        public async Task<ActionResult> TaskEdit(int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction("ListProject");
+            }
 
-        //    var task = await context.Tasks.FindAsync(id);
+            using (DataContext context = new DataContext())
+            {
+                var task = await context.Tasks.FindAsync(id);
 
-        //    if (task != null)
-        //    {
-        //        var types = await context.TaskTypes.ToListAsync();
-        //        Session["taskTypes"] = new SelectList(types, "Id", "Name", task.TaskTypeId);
+                if (task != null)
+                {
+                    var types = await context.TaskTypes.ToListAsync();
+                    ViewBag.TaskTypes = new SelectList(types, "Id", "Name", task.TaskTypeId);
 
-        //        var priorities = await context.TaskPriorities.ToListAsync();
-        //        Session["taskPriorities"] = new SelectList(priorities, "Id", "Name", task.TaskPriorityId);
+                    var priorities = await context.TaskPriorities.ToListAsync();
+                    ViewBag.TaskPriorities = new SelectList(priorities, "Id", "Name", task.TaskPriorityId);
 
-        //        var users = await context.Users.ToListAsync();
-        //        Session["taskUser"] = new SelectList((from s in users
-        //                                              select new
-        //                                              {
-        //                                                  s.Id,
-        //                                                  Name = s.UserData.LastName + " "
-        //                                                  + s.UserData.FirstName + " "
-        //                                                  + s.UserData.MiddleName
-        //                                              }), "Id", "Name", task.UserId);
+                    var users = await context.Users.Select(p => new SelectListItem
+                    {
+                        Value = p.UserDataId.ToString(),
+                        Text = p.UserData.LastName + " "
+                            + p.UserData.FirstName + " "
+                            + p.UserData.MiddleName
+                    }).ToListAsync();
 
-        //        var statuses = await context.TaskStatuses.ToListAsync();
-        //        Session["taskStatuses"] = new SelectList(statuses, "Id", "Name", task.TaskStatusId);
+                    ViewBag.TaskUser = new List<SelectListItem>(users);
 
-        //        var taskEdit = Mapper.Map<DAL.Task, EditTaskViewModel>(task);
+                    var statuses = await context.TaskStatuses.ToListAsync();
+                    ViewBag.TaskStatuses = new SelectList(statuses, "Id", "Name", task.TaskStatusId);
 
-        //        if (taskEdit.DateClose != null)
-        //        {
-        //            taskEdit.TaskClose = true;
-        //        }
+                    var taskEdit = Mapper.Map<DAL.Task, EditTaskViewModel>(task);
 
-        //        return PartialView(taskEdit);
-        //    }
-        //    return RedirectToAction("ListTask", new { id = task.ProjectId });
-        //}
+                    if (taskEdit.DateClose != null)
+                    {
+                        taskEdit.TaskClose = true;
+                    }
+
+                    return PartialView(taskEdit);
+                }
+
+                return RedirectToAction("ListTask", new { id = task.ProjectId });
+            }
+        }
 
         // Сохранение изменений задачи.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<JsonResult> TaskEdit(EditTaskViewModel model)
-        //{
-        //    try
-        //    {
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<JsonResult> TaskEdit(EditTaskViewModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    if (model.TaskClose == true && model.DateClose == null)
+                    {
+                        model.DateClose = DateTime.Now;
+                    }
+                    else if (model.TaskClose == false && model.DateClose != null)
+                    {
+                        model.DateClose = null;
+                    }
 
-        //        if (ModelState.IsValid)
-        //        {
-        //            if (model.TaskClose == true && model.DateClose == null)
-        //            {
-        //                model.DateClose = DateTime.Now;
-        //            }
-        //            else if (model.TaskClose == false && model.DateClose != null)
-        //            {
-        //                model.DateClose = null;
-        //            }
+                    var task = Mapper.Map<EditTaskViewModel, DAL.Task>(model);
 
-        //            var task = Mapper.Map<EditTaskViewModel, DAL.Task>(model);
+                    using (DataContext context = new DataContext())
+                    {
+                        context.Entry(task).State = EntityState.Modified;
+                        await context.SaveChangesAsync();
 
-        //            var type = await context.TaskTypes.FindAsync(model.TaskTypeId);
-        //            var priority = await context.TaskPriorities.FindAsync(model.TaskPriorityId);
-        //            var user = await context.UserDatas.FindAsync(model.UserId);
-        //            var status = await context.TaskStatuses.FindAsync(model.TaskStatusId);
+                        var user = await context.UserDatas.FindAsync(model.UserId);
 
-        //            context.Entry(task).State = EntityState.Modified;
-
-        //            await context.SaveChangesAsync();
-
-        //            Session.Clear();
-
-        //            return Json(new
-        //            {
-        //                taskId = task.Id,
-        //                taskName = model.TaskName,
-        //                taskType = type.Name,
-        //                description = model.Description,
-        //                taskPriority = priority.Name,
-        //                taskUser = user.LastName + " " +
-        //                                user.FirstName + " " +
-        //                                user.MiddleName,
-        //                taskStatus = status.Name,
-        //                DateCreate = model.DateCreate.ToShortDateString(),
-        //                DateClose = model.DateClose.HasValue ? model.DateClose.Value.ToShortDateString() : "",
-        //                result = true
-        //            });
-        //        }
-        //        return Json(new { result = false });
-        //    }
-        //    catch (Exception exc)
-        //    {
-        //        return Json(new { exc.Message });
-        //    }
-        //}
+                        return Json(new
+                        {
+                            taskId = task.Id,
+                            taskName = model.TaskName,
+                            taskType = context.TaskTypes.AsParallel().Where(x => x.Id == model.TaskTypeId).FirstOrDefault().Name,
+                            description = model.Description,
+                            taskPriority = context.TaskPriorities.AsParallel().Where(x => x.Id == model.TaskPriorityId).FirstOrDefault().Name,
+                            taskUser = $"{user.LastName} {user.FirstName} {user.MiddleName}",
+                            taskStatus = context.TaskStatuses.AsParallel().Where(x => x.Id == model.TaskStatusId).FirstOrDefault().Name,
+                            DateCreate = model.DateCreate.ToShortDateString(),
+                            DateClose = model.DateClose.HasValue ? model.DateClose.Value.ToShortDateString() : "",
+                            result = true
+                        });
+                    }
+                }
+                return Json(new { result = false });
+            }
+            catch (Exception exc)
+            {
+                return Json(new { exc.Message });
+            }
+        }
 
         // Удаление выбранной задачи.
-        //[HttpPost]
-        //public JsonResult TaskDelete(int id)
-        //{
-        //    try
-        //    {
-        //        var task = context.Tasks.Where(x => x.Id == id).FirstOrDefault();
+        [HttpPost]
+        public JsonResult TaskDelete(int id)
+        {
+            try
+            {
+                using (DataContext context = new DataContext())
+                {
+                    var task = context.Tasks.Where(x => x.Id == id).FirstOrDefault();
 
-        //        if (task == null)
-        //        {
-        //            return Json(new { result = false });
-        //        }
+                    if (task == null)
+                    {
+                        return Json(new { result = false });
+                    }
 
-        //        context.Tasks.Remove(task);
-        //        context.SaveChanges();
+                    context.Tasks.Remove(task);
+                    context.SaveChanges();
+                }
 
-        //        return Json(new { result = true });
-        //    }
-        //    catch (Exception exc)
-        //    {
-        //        return Json(exc.Message);
-        //    }
-        //}
+
+                return Json(new { result = true });
+            }
+            catch (Exception exc)
+            {
+                return Json(exc.Message);
+            }
+        }
 
         //public ActionResult Index()
         //{
@@ -484,12 +461,6 @@ namespace TaskManager.Controllers
 
         //    return View(tasks);
 
-        //}
-
-        //protected override void Dispose(bool disposing)
-        //{
-
-        //    base.Dispose(disposing);
         //}
     }
 }
