@@ -31,7 +31,12 @@ namespace TaskManager.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = context.Users.FirstOrDefault(u => u.Login == model.Name && u.Password == model.Password);
+                User user;
+                using(DataContext context = new DataContext())
+                {
+                    user = context.Users.FirstOrDefault(u => u.Login == model.Name && 
+                                                        u.Password == model.Password);
+                }
 
                 if (user != null)
                 {
