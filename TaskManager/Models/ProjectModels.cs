@@ -37,7 +37,6 @@ namespace TaskManager.Models
 
         [Required(ErrorMessage = "Необходимо выбрать руководителя проекта")]
         public int UserId { get; set; }
-        public virtual User User { get; set; }
     }
 
     public class EditProjectViewModel

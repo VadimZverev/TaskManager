@@ -433,7 +433,6 @@
     $(document).on('click', '#createTask', function (e) {
         e.preventDefault();
 
-        var container = this.closest('tr');
         var _id = $(this).data('id');
 
         $("#loading").show();
@@ -488,7 +487,7 @@
                             }
                         },
                         error: function (data) {
-                            console.log(data);
+                            console.log(data.Message);
                         }
                     });
                 }

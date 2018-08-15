@@ -75,12 +75,12 @@ namespace TaskManager.Controllers
                 if (ModelState.IsValid)
                 {
                     Project project;
-                    UserData user;
+                    User user;
 
                     using (DataContext context = new DataContext())
                     {
                         project = Mapper.Map<CreateProjectViewModel, Project>(model);
-                        user = context.UserDatas.Find(model.UserId);
+                        user = context.Users.Find(model.UserId);
                         context.Projects.Add(project);
                         context.SaveChanges();
 
@@ -88,9 +88,9 @@ namespace TaskManager.Controllers
                         {
                             ProjectId = project.Id,
                             ProjectName = model.Name,
-                            ProjectManager = user.LastName + " " +
-                                        user.FirstName + " " +
-                                        user.MiddleName,
+                            ProjectManager = user.UserData.LastName + " " +
+                                        user.UserData.FirstName + " " +
+                                        user.UserData.MiddleName,
                             DateCreate = project.DateCreate.ToShortDateString(),
                             result = true
                         });
@@ -267,7 +267,7 @@ namespace TaskManager.Controllers
 
                 var users = await context.Users.Select(p => new SelectListItem
                 {
-                    Value = p.UserDataId.ToString(),
+                    Value = p.Id.ToString(),
                     Text = p.UserData.LastName + " "
                         + p.UserData.FirstName + " "
                         + p.UserData.MiddleName
@@ -293,7 +293,7 @@ namespace TaskManager.Controllers
                     using (DataContext context = new DataContext())
                     {
                         var task = Mapper.Map<CreateTaskViewModel, DAL.Task>(model);
-                        var user = context.UserDatas.Find(model.UserId);
+                        var user = context.Users.Find(model.UserId);
 
                         context.Tasks.Add(task);
                         context.SaveChanges();
@@ -305,7 +305,7 @@ namespace TaskManager.Controllers
                             taskType = context.TaskTypes.AsParallel().Where(x => x.Id == model.TaskTypeId).FirstOrDefault().Name,
                             description = model.Description,
                             taskPriority = context.TaskPriorities.AsParallel().Where(x => x.Id == model.TaskPriorityId).FirstOrDefault().Name,
-                            taskUser = $"{user.LastName} {user.FirstName} {user.MiddleName}",
+                            taskUser = $"{user.UserData.LastName} {user.UserData.FirstName} {user.UserData.MiddleName}",
                             taskStatus = context.TaskStatuses.AsParallel().Where(x => x.Id == model.TaskStatusId).FirstOrDefault().Name,
                             DateCreate = task.DateCreate.ToShortDateString(),
                             result = true
@@ -317,7 +317,7 @@ namespace TaskManager.Controllers
             }
             catch (Exception exc)
             {
-                return Json(new { exc.Message });
+                return Json(new { exc.InnerException.InnerException.Message });
             }
 
         }
@@ -345,7 +345,7 @@ namespace TaskManager.Controllers
 
                     var users = await context.Users.Select(p => new SelectListItem
                     {
-                        Value = p.UserDataId.ToString(),
+                        Value = p.Id.ToString(),
                         Text = p.UserData.LastName + " "
                             + p.UserData.FirstName + " "
                             + p.UserData.MiddleName
@@ -395,7 +395,7 @@ namespace TaskManager.Controllers
                         context.Entry(task).State = EntityState.Modified;
                         await context.SaveChangesAsync();
 
-                        var user = await context.UserDatas.FindAsync(model.UserId);
+                        var user = await context.Users.FindAsync(model.UserId);
 
                         return Json(new
                         {
@@ -404,7 +404,7 @@ namespace TaskManager.Controllers
                             taskType = context.TaskTypes.AsParallel().Where(x => x.Id == model.TaskTypeId).FirstOrDefault().Name,
                             description = model.Description,
                             taskPriority = context.TaskPriorities.AsParallel().Where(x => x.Id == model.TaskPriorityId).FirstOrDefault().Name,
-                            taskUser = $"{user.LastName} {user.FirstName} {user.MiddleName}",
+                            taskUser = $"{user.UserData.LastName} {user.UserData.FirstName} {user.UserData.MiddleName}",
                             taskStatus = context.TaskStatuses.AsParallel().Where(x => x.Id == model.TaskStatusId).FirstOrDefault().Name,
                             DateCreate = model.DateCreate.ToShortDateString(),
                             DateClose = model.DateClose.HasValue ? model.DateClose.Value.ToShortDateString() : "",

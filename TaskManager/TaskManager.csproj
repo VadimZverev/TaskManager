@@ -192,6 +192,10 @@
     <Compile Include="Utils\AutoMapperConfig.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\TestProject.ldf">
+      <DependentUpon>TestProject.mdf</DependentUpon>
+    </Content>
+    <Content Include="App_Data\TestProject.mdf" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
@@ -306,9 +310,7 @@
     <Content Include="Views\Error\NotFound.cshtml" />
     <Content Include="Views\Account\EditUserData.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

@@ -8,7 +8,7 @@ namespace TaskManager.DAL
     public partial class DataContext : DbContext
     {
         public DataContext()
-            : base("name=TaskManagerDB")
+            : base("name=TaskMDB")
         {
         }
 
